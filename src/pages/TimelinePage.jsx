@@ -1,6 +1,7 @@
 import { styled } from "styled-components"
 import Header from "../components/Header"
 import PostForm from "../components/PostForm"
+import Post from "../components/Post"
 
 export default function TimelinePage(){
     return(
@@ -9,6 +10,7 @@ export default function TimelinePage(){
             <Timeline>
                 <h1>timeline</h1>
                 <PostForm></PostForm>
+                <Post></Post>
             </Timeline>
         </Page>
     )
