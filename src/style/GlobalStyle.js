@@ -1,9 +1,18 @@
-import { createGlobalStyle } from "styled-components"
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
     *{
         box-sizing: border-box;
-    }
-`
 
-export default GlobalStyle
+    }
+    body {
+        font-family: "Lato", sans-serif;
+    }
+    button {
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+`;
+
+export default GlobalStyle;
