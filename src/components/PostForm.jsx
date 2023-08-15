@@ -16,7 +16,7 @@ export default function PostForm (){
     )
 }
 
-const Container = styled.form`
+const Container = styled.div`
     flex-shrink: 0;
     margin-top: 43px;
     height: 209px;

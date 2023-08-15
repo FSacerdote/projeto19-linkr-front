@@ -9,6 +9,14 @@ export default function Post(){
             <Content>
                 <UserName>Juvenal Juvêncio</UserName>
                 <Text>Muito maneiro esse tutorial de Material UI com React, deem uma olhada!</Text>
+                <PostUrl>
+                    <TextContainer>
+                        <Title>Como aplicar o Material UI em um projeto React</Title>
+                        <Description>Hey! I have moved this tutorial to my personal blog. Same content, new location. Sorry about making you click through to another page.</Description>
+                        <Url>https://medium.com/@pshrmn/a-simple-react-router</Url>
+                    </TextContainer>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541" alt="" />
+                </PostUrl>
             </Content>
         </Container>
     )
@@ -22,6 +30,7 @@ const Container = styled.div`
     display: flex;
     padding-right: 21px;
     flex-shrink: 0;
+    padding-bottom: 20px;
 `
 const User = styled.div`
     margin-top: 16px;
@@ -51,4 +60,54 @@ const Text = styled.p`
     margin-top: 7px;
     color: #B7B7B7; 
     font-size: 17px;
+`
+
+const PostUrl = styled.div`
+    margin-top: 20px;
+    border-radius: 11px;
+    border: 1px solid #4D4D4D;
+    background: rgba(196, 196, 196, 0.00);
+    height: 155px;
+    position: relative;
+    img{
+        border-radius: 0 11px 11px 0;
+        right: 0;
+        position: absolute;
+        height: 100%;
+        top: 0;
+    }
+`
+
+const TextContainer = styled.div`
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    p{
+        font-family: 'Lato', sans-serif;
+        font-weight: 400; 
+        line-height: normal;
+    }
+`
+
+const Title = styled.p`
+    height: 38px;
+    margin-top: 24px;
+    width: 250px;
+    color: #CECECE;
+    font-size: 16px;
+`
+
+const Url = styled.p`
+    margin-top: 13px;
+    width: 300px;
+    color: #CECECE;
+    font-size: 11px;
+`
+
+const Description = styled.p`
+    height: 39px;
+    margin-top: 5px;
+    width: 260px;
+    color: #9B9595;
+    font-size: 11px;
 `
