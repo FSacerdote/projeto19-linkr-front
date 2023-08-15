@@ -25,6 +25,7 @@ const Container = styled.form`
     background-color: white;
     display: flex;
     padding-right: 21px;
+    margin-bottom: 13px;
 `
 
 const User = styled.div`

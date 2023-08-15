@@ -15,7 +15,7 @@ export default function Post(){
 }
 
 const Container = styled.div`
-    margin-top: 29px;
+    margin-top: 16px;
     height: 276px;
     border-radius: 16px;
     background: #171717;
