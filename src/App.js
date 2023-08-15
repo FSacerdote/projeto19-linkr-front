@@ -1,6 +1,7 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import ResetCss from './style/ResetCss';
-import GlobalStyle from './style/GlobalStyle';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ResetCss from "./style/ResetCss";
+import GlobalStyle from "./style/GlobalStyle";
+
 
 function App() {
   return (
@@ -8,7 +9,8 @@ function App() {
       <ResetCss />
       <GlobalStyle />
       <Routes>
-        <Route path="/" />
+
+        <Route path="/"  />
       </Routes>
     </BrowserRouter>
   );
