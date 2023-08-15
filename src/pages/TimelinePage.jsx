@@ -2,6 +2,7 @@ import { styled } from "styled-components"
 import Header from "../components/Header"
 import PostForm from "../components/PostForm"
 import Post from "../components/Post"
+import TrendingBoard from "../components/TrendingBoard"
 
 export default function TimelinePage(){
     return(
@@ -11,7 +12,10 @@ export default function TimelinePage(){
                 <h1>timeline</h1>
                 <PostForm></PostForm>
                 <Post></Post>
+                <Post></Post>
+                <Post></Post>
             </Timeline>
+            <TrendingBoard></TrendingBoard>
         </Page>
     )
 }
@@ -25,7 +29,9 @@ const Page = styled.div`
 `
 
 const Timeline = styled.div`
-    margin-top: 78px;
+    padding-bottom: 20px;
+    overflow: scroll;
+    margin-top: 53px;
     width: 611px;
     display: flex;
     flex-direction: column;

@@ -12,6 +12,7 @@ export default function Header (){
 }
 
 const Container = styled.div`
+    z-index: 3;
     position: fixed;
     top: 0;
     display: flex;

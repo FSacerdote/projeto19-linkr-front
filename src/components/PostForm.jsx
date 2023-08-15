@@ -17,6 +17,7 @@ export default function PostForm (){
 }
 
 const Container = styled.form`
+    flex-shrink: 0;
     margin-top: 43px;
     height: 209px;
     width: 100%;

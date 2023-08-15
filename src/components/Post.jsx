@@ -21,6 +21,7 @@ const Container = styled.div`
     background: #171717;
     display: flex;
     padding-right: 21px;
+    flex-shrink: 0;
 `
 const User = styled.div`
     margin-top: 16px;
