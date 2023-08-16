@@ -31,7 +31,7 @@ export function UserPage() {
 
     console.log(id);
     getInfo();
-  }, []);
+  }, [id, navigate]);
 
   return (
     <Page>
