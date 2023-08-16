@@ -10,21 +10,24 @@ export function UserPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [postList, setPostList] = useState([]);
-  const [userInfo, setUserInfo] = useState({
-    pictureUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-    username: "Fulano",
-  });
-
-  const REACT_APP_API_URL = "http://localhost:5000";
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
     async function getInfo() {
-      const userRes = await axios.get(`${REACT_APP_API_URL}/${id}/user`);
-      setUserInfo(userRes.data);
+      try {
+        const userRes = await axios.get(
+          `${process.env.REACT_APP_API_URL}/${id}/user`
+        );
+        setUserInfo(userRes.data);
 
-      const postRes = await axios.get(`${REACT_APP_API_URL}/${id}/posts`);
-      setPostList(postRes.data);
+        const postRes = await axios.get(
+          `${process.env.REACT_APP_API_URL}/${id}/posts`
+        );
+        setPostList(postRes.data);
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
     }
 
     if (!id) return navigate("/timeline");

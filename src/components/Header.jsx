@@ -2,6 +2,7 @@ import { useState } from "react";
 import { styled } from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineSearch } from "react-icons/ai";
 
 export default function Header() {
   const [searchList, setSearchList] = useState([]);
@@ -9,8 +10,6 @@ export default function Header() {
   const [focus, setFocus] = useState(false);
 
   const navigate = useNavigate();
-
-  const REACT_APP_API_URL = "http://localhost:5000";
 
   let timeout = null;
 
@@ -33,38 +32,43 @@ export default function Header() {
                   <h3>{userFound.username}</h3>
                 </ProfileLi>
               );
-            } else return <li className="noResults">No results...</li>;
+            }
           })}
       </SearchResult>
-      <SearchBar
-        placeholder="Search for people"
-        onFocus={() => {
-          setFocus(true);
-        }}
-        onBlur={() => {
-          setTimeout(() => {
-            setFocus(false);
-          }, 100);
-        }}
-        onChange={async (e) => {
-          try {
+      <SearchContainer>
+        <SearchBar
+          placeholder="Search for people"
+          onFocus={() => {
+            setFocus(true);
+          }}
+          onBlur={() => {
+            setTimeout(() => {
+              setFocus(false);
+            }, 100);
+          }}
+          onChange={async (e) => {
             clearTimeout(timeout);
             setLoading(true);
 
             timeout = setTimeout(async function () {
-              if (e.target.value.length > 3) {
-                const res = await axios.get(
-                  `${REACT_APP_API_URL}/users/${e.target.value}`
-                );
-                setSearchList(res.data);
-                setLoading(false);
+              try {
+                if (e.target.value.length > 3) {
+                  const res = await axios.get(
+                    `${process.env.REACT_APP_API_URL}/users/${e.target.value}`
+                  );
+                  setSearchList(res.data);
+                  setLoading(false);
+                }
+              } catch (error) {
+                setSearchList([]);
+                console.log(error);
+                return error;
               }
             }, 300);
-          } catch (error) {
-            console.log(error);
-          }
-        }}
-      />
+          }}
+        />
+        <SearchIcon />
+      </SearchContainer>
 
       <User>
         <img
@@ -76,17 +80,28 @@ export default function Header() {
   );
 }
 
-const SearchBar = styled.input`
+const SearchIcon = styled(AiOutlineSearch)`
+  font-size: 34px;
+  position: absolute;
+  top: 15%;
+  right: 10px;
+  color: #c6c6c6;
+`;
+
+const SearchContainer = styled.div`
   width: 30%;
-  height: 45px;
-  border-radius: 8px;
-
-  padding: 10px;
-
   position: fixed;
   top: 15px;
   left: 50%;
   transform: translateX(-50%);
+`;
+
+const SearchBar = styled.input`
+  width: 100%;
+  height: 45px;
+  border-radius: 8px;
+
+  padding: 10px;
 
   background-color: #ffffff;
   border: none;
@@ -119,19 +134,6 @@ const SearchResult = styled.ul`
   background-color: #e7e7e7;
 
   transition: max-height 0.2s ease-out;
-
-  li.noResults {
-    width: 100%;
-    font-family: "Lato";
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 32px;
-    letter-spacing: 0em;
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    color: #515151;
-  }
 `;
 
 const ProfileLi = styled.li`
