@@ -1,16 +1,16 @@
 import { styled } from "styled-components";
 import Header from "../components/Header";
-import PostForm from "../components/PostForm";
 import Post from "../components/Post";
 import TrendingBoard from "../components/TrendingBoard";
+import { useParams } from "react-router-dom";
 
-export default function TimelinePage() {
+export default function HashtagPage() {
+    const { hashtag } = useParams();
   return (
     <Page>
       <Header></Header>
       <Timeline>
-        <h1>timeline</h1>
-        <PostForm></PostForm>
+        <h1># {hashtag}</h1>
         <Post></Post>
         <Post></Post>
         <Post></Post>
@@ -47,6 +47,7 @@ const Timeline = styled.div`
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    margin-bottom: 27px;
   }
 
   @media (max-width: 1000px) {
