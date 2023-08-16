@@ -153,11 +153,19 @@ export default function LikeButton({ postId }) {
           {likes} <span>{likes === 1 ? "like" : "likes"}</span>
         </LikeCount>
       </SCLikeButton>
-      <Tooltip id="my-tooltip" />
+      <Tooltip
+        id="my-tooltip"
+        style={{
+          backgroundColor: "rgb(255, 255, 255)",
+          color: "#222",
+          borderRadius: "3px",
+        }}
+      />
     </>
   );
 }
 
+//
 const SCLikeButton = styled.div`
   display: flex;
   flex-direction: column;
