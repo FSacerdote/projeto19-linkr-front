@@ -36,10 +36,12 @@ const SCLikeButton = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #fff;
 `;
 
 const HeartOutline = styled(AiOutlineHeart)`
   font-size: 20px;
+  color: #fff;
 `;
 const Heart = styled(AiFillHeart)`
   font-size: 20px;
