@@ -40,12 +40,14 @@ export function UserPage() {
     <Page>
       <Header></Header>
       <Timeline>
-        {userInfo.username && (
-          <UserTitleContainer>
-            <img src={userInfo.pictureUrl} alt={userInfo.username} />
-            <h1>{userInfo.username}'s posts</h1>
-          </UserTitleContainer>
-        )}
+        <UserTitleContainer>
+          {userInfo.username && (
+            <>
+              <img src={userInfo.pictureUrl} alt={userInfo.username} />
+              <h1>{userInfo.username}'s posts</h1>
+            </>
+          )}
+        </UserTitleContainer>
         {postList &&
           postList.map((post) => {
             return <Post />;
