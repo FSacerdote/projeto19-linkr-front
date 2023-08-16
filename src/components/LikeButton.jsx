@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { styled } from "styled-components";
+import { Tooltip } from "react-tooltip";
 
 export default function LikeButton({ postId }) {
   const [likes, setLikes] = useState(0);
@@ -67,6 +69,11 @@ export default function LikeButton({ postId }) {
       <LikeCount>
         {likes} <span>{likes === 1 ? "like" : "likes"}</span>
       </LikeCount>
+      <Tooltip
+        id="my-tooltip-1"
+        place="bottom"
+        content="Hello world! I'm a Tooltip"
+      />
     </SCLikeButton>
   );
 }
