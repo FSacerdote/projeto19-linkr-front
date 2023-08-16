@@ -42,7 +42,7 @@ export default function Header() {
           onBlur={() => {
             setTimeout(() => {
               setFocus(false);
-            }, 100);
+            }, 200);
           }}
           onChange={async (e) => {
             clearTimeout(timeout);
