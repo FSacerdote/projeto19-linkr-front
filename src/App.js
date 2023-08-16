@@ -11,7 +11,7 @@ function App() {
       <GlobalStyle />
       <Routes>
         <Route path="/timeline" element={<TimelinePage />} />
-        <Route path="/user/:username?" element={<UserPage />} />
+        <Route path="/user/:id?" element={<UserPage />} />
       </Routes>
     </BrowserRouter>
   );
