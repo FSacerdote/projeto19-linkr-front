@@ -2,60 +2,72 @@ import { useState } from "react";
 import { styled } from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineSearch } from "react-icons/ai";
 
 export default function Header() {
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [focus, setFocus] = useState(false);
 
   const navigate = useNavigate();
-
-  const REACT_APP_API_URL = "http://localhost:5000";
 
   let timeout = null;
 
   return (
     <Container>
       <Logo>linkr</Logo>
+      <SearchResult>
+        {!loading &&
+          focus &&
+          searchList.map((userFound) => {
+            return (
+              <ProfileLi
+                data-test="user-search"
+                key={userFound.id}
+                onClick={() => {
+                  navigate(`/user/${userFound.id}`);
+                }}
+              >
+                <img src={userFound.pictureUrl} alt={userFound.username} />
+                <h3>{userFound.username}</h3>
+              </ProfileLi>
+            );
+          })}
+      </SearchResult>
       <SearchContainer>
-        <SearchResult>
-          {!loading &&
-            searchList.map((userFound) => {
-              if (searchList.length > 0) {
-                return (
-                  <ProfileLi
-                    key={userFound.id}
-                    onClick={() => {
-                      navigate(`/user/${userFound.id}`);
-                    }}
-                  >
-                    <img src={userFound.pictureUrl} alt={userFound.username} />
-                    <h3>{userFound.username}</h3>
-                  </ProfileLi>
-                );
-              } else return <li className="noResults">No results...</li>;
-            })}
-        </SearchResult>
         <SearchBar
+          data-test="search"
           placeholder="Search for people"
+          onFocus={() => {
+            setFocus(true);
+          }}
+          onBlur={() => {
+            setTimeout(() => {
+              setFocus(false);
+            }, 200);
+          }}
           onChange={async (e) => {
-            try {
-              clearTimeout(timeout);
-              setLoading(true);
+            clearTimeout(timeout);
+            setLoading(true);
 
-              timeout = setTimeout(async function () {
-                if (e.target.value.length > 3) {
+            timeout = setTimeout(async function () {
+              try {
+                if (e.target.value.length >= 3) {
                   const res = await axios.get(
-                    `${REACT_APP_API_URL}/users/${e.target.value}`
+                    `${process.env.REACT_APP_API_URL}/users/${e.target.value}`
                   );
                   setSearchList(res.data);
                   setLoading(false);
                 }
-              }, 300);
-            } catch (error) {
-              console.log(error);
-            }
+              } catch (error) {
+                setSearchList([]);
+                console.log(error);
+                return error;
+              }
+            }, 300);
           }}
         />
+        <SearchIcon />
       </SearchContainer>
 
       <User>
@@ -68,14 +80,24 @@ export default function Header() {
   );
 }
 
+const SearchIcon = styled(AiOutlineSearch)`
+  font-size: 34px;
+  position: absolute;
+  top: 15%;
+  right: 10px;
+  color: #c6c6c6;
+`;
+
 const SearchContainer = styled.div`
-  width: fit-content;
-  height: fit-content;
-  position: relative;
+  width: 30%;
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 
 const SearchBar = styled.input`
-  width: 563px;
+  width: 100%;
   height: 45px;
   border-radius: 8px;
 
@@ -97,31 +119,21 @@ const SearchBar = styled.input`
 `;
 
 const SearchResult = styled.ul`
-  width: 100%;
+  width: 30%;
   height: fit-content;
   max-height: 300px;
 
-  position: absolute;
-  top: 45px;
-  left: 0;
+  padding-top: 45px;
+
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
 
   border-radius: 8px;
   background-color: #e7e7e7;
 
   transition: max-height 0.2s ease-out;
-
-  li.noResults {
-    width: 100%;
-    font-family: "Lato";
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 32px;
-    letter-spacing: 0em;
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    color: #515151;
-  }
 `;
 
 const ProfileLi = styled.li`
