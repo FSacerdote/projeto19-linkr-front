@@ -15,7 +15,7 @@ export default function LikeButton({ postId }) {
         - fazer requisição com a api
         - preciso saber como o componente Post irá ser criado 
     */
-  useEffect(() => {
+  /*  useEffect(() => {
     const config = {
       headers: {
         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc`,
@@ -24,30 +24,31 @@ export default function LikeButton({ postId }) {
     axios.get(`${apiUrl}/post/${postId}/likes`, config).then((resp) => {
       console.log(resp.data);
       setLikes(resp.data);
-    });
-  }, [apiUrl, postId]);
+    }); 
+  }, [apiUrl, postId]); */
 
   function handleLike() {
     console.log(postId);
-    const config = {
+    /* const config = {
       headers: {
         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc`,
       },
-    };
+    }; */
     setHeart(!heart);
     if (!heart) {
       // TO-DO substituir com o token do use Context
 
-      axios
+      /* axios
         .post(`${apiUrl}/like/${postId}`, config)
         .then((resp) => {
           console.log(resp.data);
         })
         .catch((err) => {
           console.log(err.response);
-        });
+        }); */
       setLikes(likes + 1);
     } else {
+      /*
       axios
         .delete(`${apiUrl}/like/${postId}`, config)
         .then((resp) => {
@@ -55,7 +56,7 @@ export default function LikeButton({ postId }) {
         })
         .catch((err) => {
           console.log(err.response);
-        });
+        }); */
       setLikes(likes - 1);
     }
   }
