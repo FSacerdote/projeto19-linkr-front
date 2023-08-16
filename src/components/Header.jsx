@@ -103,6 +103,11 @@ const SearchBar = styled.input`
 
   padding: 10px;
 
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+
   background-color: #ffffff;
   border: none;
   outline: none;
