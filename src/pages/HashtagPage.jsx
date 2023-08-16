@@ -49,4 +49,8 @@ const Timeline = styled.div`
     line-height: normal;
     margin-bottom: 27px;
   }
+
+  @media (max-width: 1000px) {
+    margin-top: 20px;
+  }
 `;

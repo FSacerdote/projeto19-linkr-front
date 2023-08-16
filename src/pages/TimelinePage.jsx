@@ -48,4 +48,8 @@ const Timeline = styled.div`
     font-weight: 700;
     line-height: normal;
   }
+
+  @media (max-width: 1000px) {
+    margin-top: 20px;
+  }
 `;
