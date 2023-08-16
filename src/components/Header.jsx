@@ -17,56 +17,54 @@ export default function Header() {
   return (
     <Container>
       <Logo>linkr</Logo>
-      <SearchContainer>
-        <SearchResult>
-          {!loading &&
-            focus &&
-            searchList.map((userFound) => {
-              if (searchList.length > 0) {
-                return (
-                  <ProfileLi
-                    key={userFound.id}
-                    onClick={() => {
-                      navigate(`/user/${userFound.id}`);
-                    }}
-                  >
-                    <img src={userFound.pictureUrl} alt={userFound.username} />
-                    <h3>{userFound.username}</h3>
-                  </ProfileLi>
-                );
-              } else return <li className="noResults">No results...</li>;
-            })}
-        </SearchResult>
-        <SearchBar
-          placeholder="Search for people"
-          onFocus={() => {
-            setFocus(true);
-          }}
-          onBlur={() => {
-            setTimeout(() => {
-              setFocus(false);
-            }, 100);
-          }}
-          onChange={async (e) => {
-            try {
-              clearTimeout(timeout);
-              setLoading(true);
+      <SearchResult>
+        {!loading &&
+          focus &&
+          searchList.map((userFound) => {
+            if (searchList.length > 0) {
+              return (
+                <ProfileLi
+                  key={userFound.id}
+                  onClick={() => {
+                    navigate(`/user/${userFound.id}`);
+                  }}
+                >
+                  <img src={userFound.pictureUrl} alt={userFound.username} />
+                  <h3>{userFound.username}</h3>
+                </ProfileLi>
+              );
+            } else return <li className="noResults">No results...</li>;
+          })}
+      </SearchResult>
+      <SearchBar
+        placeholder="Search for people"
+        onFocus={() => {
+          setFocus(true);
+        }}
+        onBlur={() => {
+          setTimeout(() => {
+            setFocus(false);
+          }, 100);
+        }}
+        onChange={async (e) => {
+          try {
+            clearTimeout(timeout);
+            setLoading(true);
 
-              timeout = setTimeout(async function () {
-                if (e.target.value.length > 3) {
-                  const res = await axios.get(
-                    `${REACT_APP_API_URL}/users/${e.target.value}`
-                  );
-                  setSearchList(res.data);
-                  setLoading(false);
-                }
-              }, 300);
-            } catch (error) {
-              console.log(error);
-            }
-          }}
-        />
-      </SearchContainer>
+            timeout = setTimeout(async function () {
+              if (e.target.value.length > 3) {
+                const res = await axios.get(
+                  `${REACT_APP_API_URL}/users/${e.target.value}`
+                );
+                setSearchList(res.data);
+                setLoading(false);
+              }
+            }, 300);
+          } catch (error) {
+            console.log(error);
+          }
+        }}
+      />
 
       <User>
         <img
@@ -78,18 +76,17 @@ export default function Header() {
   );
 }
 
-const SearchContainer = styled.div`
-  width: fit-content;
-  height: fit-content;
-  position: relative;
-`;
-
 const SearchBar = styled.input`
-  width: 563px;
+  width: 30%;
   height: 45px;
   border-radius: 8px;
 
   padding: 10px;
+
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
 
   background-color: #ffffff;
   border: none;
@@ -107,13 +104,16 @@ const SearchBar = styled.input`
 `;
 
 const SearchResult = styled.ul`
-  width: 100%;
+  width: 30%;
   height: fit-content;
   max-height: 300px;
 
-  position: absolute;
-  top: 45px;
-  left: 0;
+  padding-top: 45px;
+
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
 
   border-radius: 8px;
   background-color: #e7e7e7;
