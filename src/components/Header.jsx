@@ -22,6 +22,7 @@ export default function Header() {
           searchList.map((userFound) => {
             return (
               <ProfileLi
+                data-test="user-search"
                 key={userFound.id}
                 onClick={() => {
                   navigate(`/user/${userFound.id}`);
@@ -35,6 +36,7 @@ export default function Header() {
       </SearchResult>
       <SearchContainer>
         <SearchBar
+          data-test="search"
           placeholder="Search for people"
           onFocus={() => {
             setFocus(true);
