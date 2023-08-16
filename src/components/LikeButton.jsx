@@ -6,8 +6,8 @@ import { styled } from "styled-components";
 import { Tooltip } from "react-tooltip";
 
 export default function LikeButton({ postId }) {
-  const [likes, setLikes] = useState(2);
-  const [users, setUsers] = useState(["João", "Maria"]);
+  const [likes, setLikes] = useState(0);
+  const [users, setUsers] = useState([]);
   const [heart, setHeart] = useState(false);
   const [tooltip, setTooltip] = useState("");
   const heartAtual = heart ? <Heart /> : <HeartOutline />;
@@ -37,7 +37,7 @@ export default function LikeButton({ postId }) {
         tooltipContent = "Você e outras pessoas curtiram";
       } else {
         tooltipContent = `Você, ${firstOtherUser} e outras ${remainingUsers} pessoa${
-          remainingUsers > 1 ? "s" : ""
+          remainingUsers !== 1 ? "s" : ""
         }`;
       }
     } else {
@@ -49,7 +49,7 @@ export default function LikeButton({ postId }) {
         tooltipContent = "Ninguém curtiu ainda";
       } else {
         tooltipContent = `${currentUser}, ${firstOtherUser} e outras ${remainingUsers} pessoa${
-          remainingUsers > 1 ? "s" : ""
+          remainingUsers !== 1 ? "s" : ""
         }`;
       }
     }
@@ -92,7 +92,7 @@ export default function LikeButton({ postId }) {
         .catch((err) => {
           console.log(err.response);
         }); */
-      setUsers(["Você", "João", "Maria"]);
+      setUsers(["Você"]);
       setLikes(likes + 1);
     } else {
       /*
@@ -104,7 +104,7 @@ export default function LikeButton({ postId }) {
         .catch((err) => {
           console.log(err.response);
         }); */
-      setUsers(["João", "Maria"]);
+      setUsers([]);
       setLikes(likes - 1);
     }
   }
