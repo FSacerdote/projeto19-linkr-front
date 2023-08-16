@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { styled } from "styled-components";
 
@@ -6,18 +7,55 @@ export default function LikeButton({ postId }) {
   const [likes, setLikes] = useState(0);
   const [heart, setHeart] = useState(false);
   const heartAtual = heart ? <Heart /> : <HeartOutline />;
+  //const [token] = useContext();
+
+  const apiUrl = process.env.REACT_APP_API_URL;
   /* TO-DO 
         - adicionar o context de autenticação
         - fazer requisição com a api
         - preciso saber como o componente Post irá ser criado 
     */
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc`,
+      },
+    };
+    axios.get(`${apiUrl}/post/${postId}/likes`, config).then((resp) => {
+      console.log(resp.data);
+      setLikes(resp.data);
+    });
+  }, [apiUrl, postId]);
 
   function handleLike() {
     console.log(postId);
+    const config = {
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc`,
+      },
+    };
     setHeart(!heart);
     if (!heart) {
+      // TO-DO substituir com o token do use Context
+
+      axios
+        .post(`${apiUrl}/like/${postId}`, config)
+        .then((resp) => {
+          console.log(resp.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
       setLikes(likes + 1);
     } else {
+      axios
+        .delete(`${apiUrl}/like/${postId}`, config)
+        .then((resp) => {
+          console.log(resp.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
       setLikes(likes - 1);
     }
   }

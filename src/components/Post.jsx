@@ -48,7 +48,7 @@ const Container = styled.div`
   flex-shrink: 0;
   padding-bottom: 20px;
 `;
-const Info = styled.p`
+const Info = styled.div`
   display: flex;
   flex-direction: column;
   padding-top: 16px;
