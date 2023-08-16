@@ -10,7 +10,11 @@ export function UserPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [postList, setPostList] = useState([]);
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState({
+    pictureUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+    username: "Fulano",
+  });
 
   const REACT_APP_API_URL = "http://localhost:5000";
 
@@ -35,7 +39,7 @@ export function UserPage() {
       <Timeline>
         <UserTitleContainer>
           <img src={userInfo.pictureUrl} alt={userInfo.username} />
-          <h1>{userInfo.username}</h1>
+          <h1>{userInfo.username}'s posts</h1>
         </UserTitleContainer>
         {postList &&
           postList.map((post) => {

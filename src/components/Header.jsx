@@ -43,14 +43,14 @@ export default function Header() {
               setLoading(true);
 
               timeout = setTimeout(async function () {
-                if (e.target.value) {
+                if (e.target.value.length > 3) {
                   const res = await axios.get(
                     `${REACT_APP_API_URL}/users/${e.target.value}`
                   );
                   setSearchList(res.data);
                   setLoading(false);
                 }
-              }, 1000);
+              }, 300);
             } catch (error) {
               console.log(error);
             }
