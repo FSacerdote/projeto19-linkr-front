@@ -40,12 +40,13 @@ export default function TrendingBoard() {
 }
 
 const Board = styled.div`
-  margin-top: 160px;
   margin-left: 25px;
   width: 301px;
   height: 406px;
   background: #171717;
   border-radius: 16px;
+  position: sticky;
+  top: 231px;
 
   h2 {
     font-family: "Oswald", sans-serif;
@@ -71,5 +72,21 @@ const Board = styled.div`
     font-size: 19px;
     text-decoration: none;
     letter-spacing: 0.9px;
+  }
+
+  @media (max-width: 1000px) {
+    max-width: 611px;
+    width: 100%;
+    height: auto;
+    padding-bottom: 20px;
+    position: static;
+    margin-left: 0;
+    margin-top: 90px;
+
+    ul {
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 18px;
+    }
   }
 `;
