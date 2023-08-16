@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function Header() {
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [focus, setFocus] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ export default function Header() {
       <SearchContainer>
         <SearchResult>
           {!loading &&
+            focus &&
             searchList.map((userFound) => {
               if (searchList.length > 0) {
                 return (
@@ -37,6 +39,14 @@ export default function Header() {
         </SearchResult>
         <SearchBar
           placeholder="Search for people"
+          onFocus={() => {
+            setFocus(true);
+          }}
+          onBlur={() => {
+            setTimeout(() => {
+              setFocus(false);
+            }, 100);
+          }}
           onChange={async (e) => {
             try {
               clearTimeout(timeout);
