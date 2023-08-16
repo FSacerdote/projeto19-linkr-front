@@ -20,19 +20,17 @@ export default function Header() {
         {!loading &&
           focus &&
           searchList.map((userFound) => {
-            if (searchList.length > 0) {
-              return (
-                <ProfileLi
-                  key={userFound.id}
-                  onClick={() => {
-                    navigate(`/user/${userFound.id}`);
-                  }}
-                >
-                  <img src={userFound.pictureUrl} alt={userFound.username} />
-                  <h3>{userFound.username}</h3>
-                </ProfileLi>
-              );
-            }
+            return (
+              <ProfileLi
+                key={userFound.id}
+                onClick={() => {
+                  navigate(`/user/${userFound.id}`);
+                }}
+              >
+                <img src={userFound.pictureUrl} alt={userFound.username} />
+                <h3>{userFound.username}</h3>
+              </ProfileLi>
+            );
           })}
       </SearchResult>
       <SearchContainer>
@@ -52,7 +50,7 @@ export default function Header() {
 
             timeout = setTimeout(async function () {
               try {
-                if (e.target.value.length > 3) {
+                if (e.target.value.length >= 3) {
                   const res = await axios.get(
                     `${process.env.REACT_APP_API_URL}/users/${e.target.value}`
                   );
