@@ -16,26 +16,26 @@ export default function Header() {
   return (
     <Container>
       <Logo>linkr</Logo>
-      <SearchResult>
-        {!loading &&
-          focus &&
-          searchList.map((userFound) => {
-            if (searchList.length > 0) {
-              return (
-                <ProfileLi
-                  key={userFound.id}
-                  onClick={() => {
-                    navigate(`/user/${userFound.id}`);
-                  }}
-                >
-                  <img src={userFound.pictureUrl} alt={userFound.username} />
-                  <h3>{userFound.username}</h3>
-                </ProfileLi>
-              );
-            }
-          })}
-      </SearchResult>
       <SearchContainer>
+        <SearchResult>
+          {!loading &&
+            focus &&
+            searchList.map((userFound) => {
+              if (searchList.length > 0) {
+                return (
+                  <ProfileLi
+                    key={userFound.id}
+                    onClick={() => {
+                      navigate(`/user/${userFound.id}`);
+                    }}
+                  >
+                    <img src={userFound.pictureUrl} alt={userFound.username} />
+                    <h3>{userFound.username}</h3>
+                  </ProfileLi>
+                );
+              } else return <li className="noResults">No results...</li>;
+            })}
+        </SearchResult>
         <SearchBar
           placeholder="Search for people"
           onFocus={() => {
