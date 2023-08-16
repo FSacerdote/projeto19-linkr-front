@@ -6,9 +6,12 @@ import { styled } from "styled-components";
 import { Tooltip } from "react-tooltip";
 
 export default function LikeButton({ postId }) {
-  const [likes, setLikes] = useState(0);
+  const [likes, setLikes] = useState(2);
+  const [users, setUsers] = useState(["João", "Maria"]);
   const [heart, setHeart] = useState(false);
+  const [tooltip, setTooltip] = useState("");
   const heartAtual = heart ? <Heart /> : <HeartOutline />;
+
   //const [token] = useContext();
 
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -17,6 +20,46 @@ export default function LikeButton({ postId }) {
         - fazer requisição com a api
         - preciso saber como o componente Post irá ser criado 
     */
+  function createTooltip() {
+    const likedByCurrentUser = heart;
+    const currentUser = users[0];
+    const firstOtherUser = users[1];
+    const remainingUsers = Math.max(likes - 2, 0);
+
+    let tooltipContent = "";
+
+    if (likedByCurrentUser) {
+      if (likes === 1) {
+        tooltipContent = "Você curtiu";
+      } else if (likes === 2) {
+        tooltipContent = `Você e ${firstOtherUser} curtiram`;
+      } else if (remainingUsers === 0) {
+        tooltipContent = "Você e outras pessoas curtiram";
+      } else {
+        tooltipContent = `Você, ${firstOtherUser} e outras ${remainingUsers} pessoa${
+          remainingUsers > 1 ? "s" : ""
+        }`;
+      }
+    } else {
+      if (likes === 1) {
+        tooltipContent = `${currentUser} curtiu`;
+      } else if (likes === 2) {
+        tooltipContent = `${currentUser} e ${firstOtherUser} curtiram`;
+      } else if (remainingUsers === 0) {
+        tooltipContent = "Ninguém curtiu ainda";
+      } else {
+        tooltipContent = `${currentUser}, ${firstOtherUser} e outras ${remainingUsers} pessoa${
+          remainingUsers > 1 ? "s" : ""
+        }`;
+      }
+    }
+    setTooltip(tooltipContent);
+  }
+
+  useEffect(() => {
+    createTooltip();
+  });
+
   /*  useEffect(() => {
     const config = {
       headers: {
@@ -25,7 +68,8 @@ export default function LikeButton({ postId }) {
     };
     axios.get(`${apiUrl}/post/${postId}/likes`, config).then((resp) => {
       console.log(resp.data);
-      setLikes(resp.data);
+      setLikes(resp.data.likeCount);
+      setUsers(resp.data.likedUsers)
     }); 
   }, [apiUrl, postId]); */
 
@@ -48,6 +92,7 @@ export default function LikeButton({ postId }) {
         .catch((err) => {
           console.log(err.response);
         }); */
+      setUsers(["Você", "João", "Maria"]);
       setLikes(likes + 1);
     } else {
       /*
@@ -59,22 +104,57 @@ export default function LikeButton({ postId }) {
         .catch((err) => {
           console.log(err.response);
         }); */
+      setUsers(["João", "Maria"]);
       setLikes(likes - 1);
     }
   }
 
+  /* function handleMouseEnter() {
+    console.log(heart);
+    console.log(likes);
+    console.log(users);
+    if (heart) {
+      if (likes >= 2) {
+        // Caso tenha mais de 1 curtida
+        const others = likes - 2;
+        const additionalPerson = likes === 2 ? `Você e ${users[1]}` : users[1];
+        return `Você, ${additionalPerson} e outras ${others} pessoa${
+          others > 1 ? "s" : ""
+        }`;
+      } else {
+        // Caso tenha apenas 1 curtida
+        return "Você curtiu";
+      }
+    } else if (!heart) {
+      if (likes >= 2) {
+        // Caso tenha mais de 1 curtida
+        const others = likes - 2;
+        const additionalPerson = `${users[0]}, ${users[1]}`;
+        return `${additionalPerson} e outras ${others} pessoa${
+          others > 1 ? "s" : ""
+        }`;
+      } else if (likes === 1) {
+        // Caso tenha apenas 1 curtida
+        return `${users[0]} curtiu`;
+      }
+    }
+  } */
+
   return (
-    <SCLikeButton>
-      <button onClick={handleLike}>{heartAtual}</button>
-      <LikeCount>
-        {likes} <span>{likes === 1 ? "like" : "likes"}</span>
-      </LikeCount>
-      <Tooltip
-        id="my-tooltip-1"
-        place="bottom"
-        content="Hello world! I'm a Tooltip"
-      />
-    </SCLikeButton>
+    <>
+      <SCLikeButton
+        data-tooltip-id="my-tooltip"
+        data-tooltip-place="bottom"
+        data-tooltip-content={tooltip}
+        onClick={handleLike}
+      >
+        <button>{heartAtual}</button>
+        <LikeCount>
+          {likes} <span>{likes === 1 ? "like" : "likes"}</span>
+        </LikeCount>
+      </SCLikeButton>
+      <Tooltip id="my-tooltip" />
+    </>
   );
 }
 
