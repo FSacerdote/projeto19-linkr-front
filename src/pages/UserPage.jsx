@@ -1,10 +1,18 @@
 import { styled } from "styled-components";
 import Header from "../components/Header";
-import PostForm from "../components/PostForm";
 import Post from "../components/Post";
 import TrendingBoard from "../components/TrendingBoard";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export function UserPage() {
+  const { username } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!username) navigate("/user/usuarioLogado");
+  }, []);
+
   return (
     <Page>
       <Header></Header>
