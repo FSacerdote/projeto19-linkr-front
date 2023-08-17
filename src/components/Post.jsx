@@ -1,10 +1,97 @@
 import { styled } from "styled-components";
 import LikeButton from "./LikeButton";
 import { useNavigate } from "react-router-dom";
+import { PiPencilFill } from "react-icons/pi";
+import { AiFillDelete } from "react-icons/ai";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function Post({ post }) {
   const { id, userId, username, pictureUrl, description, data, url } = post;
+  const [editedText, setEditedText] = useState(description);
+  const [editModeText, setEditModeText] = useState(editedText);
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc";
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const editFieldRef = useRef();
+
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  function handleEdit() {
+    console.log("Editando");
+    if (isEditing) {
+      setEditedText(editModeText);
+      setIsEditing(false);
+    } else {
+      setEditModeText(editedText);
+    }
+    setIsEditing(!isEditing);
+  }
+
+  function handleInputChange(e) {
+    const input = e.target.value;
+
+    setEditedText(input);
+
+    console.log("Texto está mudando");
+  }
+
+  function handleInputBlur() {
+    setIsEditing(false);
+    setEditedText(editModeText);
+  }
+
+  function handleDelete() {
+    console.log("Deletando");
+  }
+
+  async function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      setLoading(true);
+
+      const editPostForm = {
+        url,
+        description: editedText,
+      };
+
+      axios
+        .put(`${apiUrl}/posts/edit/${id}`, editPostForm, config)
+        .then((resp) => {
+          console.log(resp.data);
+          setEditedText(editedText);
+          setLoading(false);
+          setIsEditing(false);
+        })
+        .catch((err) => {
+          setEditedText(editModeText);
+          setIsEditing(false);
+          alert("Erro ao atualizar o post");
+        });
+    } else if (event.key === "Escape") {
+      setIsEditing(false);
+      setEditedText(description);
+    }
+  }
+
+  useEffect(() => {
+    if (isEditing) {
+      editFieldRef.current.focus();
+      editFieldRef.current.selectionStart = editFieldRef.current.value.length;
+      editFieldRef.current.selectionEnd = editFieldRef.current.value.length;
+    }
+  }, [isEditing]);
+
   return (
     <Container>
       <Info>
@@ -20,8 +107,41 @@ export default function Post({ post }) {
         <LikeButton postId={id} />
       </Info>
       <Content>
-        <UserName>{username}</UserName>
-        <Text>{description}</Text>
+        <Top>
+          <UserName>{username}</UserName>
+          <Buttons>
+            <EditIcon onClick={handleEdit} />
+            <DeleteIcon onClick={handleDelete} />
+          </Buttons>
+        </Top>
+        {isEditing && !loading ? (
+          <EditingPost
+            ref={editFieldRef}
+            type="text"
+            value={editedText}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            onKeyDown={handleKeyDown}
+          />
+        ) : (
+          <Text>
+            {loading ? (
+              <ThreeDots
+                height="19"
+                width="30"
+                radius="9"
+                color="#b7b7b7"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClassName=""
+                visible={true}
+              />
+            ) : (
+              editedText
+            )}
+          </Text>
+        )}
+
         <PostUrl
           onClick={() => {
             window.location.href = url;
@@ -55,7 +175,17 @@ const Info = styled.div`
   padding-left: 18px;
   gap: 19px;
 `;
+const Top = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 19px;
+`;
 
+const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 9px;
+`;
 const User = styled.div`
   img {
     width: 50px;
@@ -76,7 +206,6 @@ const Content = styled.div`
 `;
 
 const UserName = styled.p`
-  margin-top: 19px;
   color: #fff;
   font-size: 19px;
 `;
@@ -141,4 +270,31 @@ const Description = styled.p`
   width: 260px;
   color: #9b9595;
   font-size: 11px;
+`;
+
+const EditIcon = styled(PiPencilFill)`
+  font-size: 20px;
+  cursor: pointer;
+  color: #fff;
+`;
+
+const DeleteIcon = styled(AiFillDelete)`
+  font-size: 20px;
+  display: flex;
+  cursor: pointer;
+  color: #fff;
+`;
+
+const EditingPost = styled.textarea`
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: #4c4c4c;
+  font-family: Lato;
+  font-size: 17px;
+  border: none;
+  border-radius: 7px;
+  resize: none;
+  &:focus {
+    outline: none;
+  }
 `;
