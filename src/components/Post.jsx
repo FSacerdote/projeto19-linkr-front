@@ -1,8 +1,7 @@
 import { styled } from "styled-components";
 import LikeButton from "./LikeButton";
 import { useNavigate } from "react-router-dom";
-import EditPost from "./EditPost";
-import DeletePost from "./DeletePost";
+import { PiPencilFill } from "react-icons/pi";
 
 export default function Post({ post }) {
   const { id, userId, username, pictureUrl, description, data, url } = post;
@@ -25,8 +24,7 @@ export default function Post({ post }) {
         <Top>
           <UserName>{username}</UserName>
           <Buttons>
-            <EditPost />
-            <DeletePost />
+            <EditIcon />
           </Buttons>
         </Top>
 
@@ -159,4 +157,10 @@ const Description = styled.p`
   width: 260px;
   color: #9b9595;
   font-size: 11px;
+`;
+
+const EditIcon = styled(PiPencilFill)`
+  font-size: 20px;
+  cursor: pointer;
+  color: #fff;
 `;
