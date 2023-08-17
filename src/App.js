@@ -2,11 +2,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ResetCss from "./style/ResetCss";
 import GlobalStyle from "./style/GlobalStyle";
 import TimelinePage from "./pages/TimelinePage";
+import SignupPage from "./pages/Login/SignupPage";
+import SigninPage from "./pages/Login/SigninPage";
 
-import SignupPage from "./pages/Signup/SignupPage";
 
 import HashtagPage from "./pages/HashtagPage"
 import { UserPage } from "./pages/UserPage";
+
 
 
 function App() {
@@ -18,10 +20,11 @@ function App() {
         <Route path="/timeline" element={<TimelinePage />} />
 
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/signin" element={<SigninPage />} />
+
 
         <Route path="/user/:id?" element={<UserPage />} />
         <Route path="/hashtag/:hashtag" element={<HashtagPage />} />
-
       </Routes>
     </BrowserRouter>
   );
