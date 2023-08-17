@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { PiPencilFill } from "react-icons/pi";
 import { AiFillDelete } from "react-icons/ai";
 import { useEffect, useRef, useState } from "react";
+import Modal from "react-modal";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
+
+Modal.setAppElement("#root");
 
 export default function Post({ post }) {
   const { id, userId, username, pictureUrl, description, data, url } = post;
@@ -14,6 +17,7 @@ export default function Post({ post }) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc";
@@ -52,10 +56,6 @@ export default function Post({ post }) {
     setEditedText(editModeText);
   }
 
-  function handleDelete() {
-    console.log("Deletando");
-  }
-
   async function handleKeyDown(event) {
     if (event.key === "Enter") {
       setLoading(true);
@@ -92,6 +92,17 @@ export default function Post({ post }) {
     }
   }, [isEditing]);
 
+  function handleDeleteConfirm() {
+    console.log("Deletando");
+  }
+  function openDeleteModal() {
+    setDeleteModalOpen(true);
+  }
+
+  function closeDeleteModal() {
+    setDeleteModalOpen(false);
+  }
+
   return (
     <Container>
       <Info>
@@ -111,7 +122,7 @@ export default function Post({ post }) {
           <UserName>{username}</UserName>
           <Buttons>
             <EditIcon onClick={handleEdit} />
-            <DeleteIcon onClick={handleDelete} />
+            <DeleteIcon onClick={openDeleteModal} />
           </Buttons>
         </Top>
         {isEditing && !loading ? (
@@ -123,23 +134,19 @@ export default function Post({ post }) {
             onBlur={handleInputBlur}
             onKeyDown={handleKeyDown}
           />
+        ) : loading ? (
+          <ThreeDots
+            height="19"
+            width="30"
+            radius="9"
+            color="#b7b7b7"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClassName=""
+            visible={true}
+          />
         ) : (
-          <Text>
-            {loading ? (
-              <ThreeDots
-                height="19"
-                width="30"
-                radius="9"
-                color="#b7b7b7"
-                ariaLabel="three-dots-loading"
-                wrapperStyle={{}}
-                wrapperClassName=""
-                visible={true}
-              />
-            ) : (
-              editedText
-            )}
-          </Text>
+          <Text>{editedText}</Text>
         )}
 
         <PostUrl
@@ -155,6 +162,27 @@ export default function Post({ post }) {
           <img src={data.image} alt="" />
         </PostUrl>
       </Content>
+      {isDeleteModalOpen && <BackgroundOverlay />}
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onRequestClose={closeDeleteModal}
+        contentLabel="Delete Modal"
+        overlayClassName="custom-overlay"
+      >
+        <DeleteOptions>
+          <p>
+            Are you sure you want
+            <br />
+            to delete this post?
+          </p>
+          <div>
+            <CancelDelete onClick={closeDeleteModal}>No, go back</CancelDelete>
+            <ConfirmDelete onClick={handleDeleteConfirm}>
+              Yes, delete it
+            </ConfirmDelete>
+          </div>
+        </DeleteOptions>
+      </DeleteModal>
     </Container>
   );
 }
@@ -297,4 +325,60 @@ const EditingPost = styled.textarea`
   &:focus {
     outline: none;
   }
+`;
+const DeleteModal = styled(Modal)``;
+const DeleteOptions = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  background-color: #333;
+  border-radius: 50px;
+  width: 597px;
+  height: 262px;
+  color: #fff;
+  font-size: 34px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  button {
+    border: none;
+    border-radius: 4px;
+    width: 134px;
+    height: 37px;
+    cursor: pointer;
+    margin: 13px;
+    font-family: Lato;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+`;
+
+const CancelDelete = styled.button`
+  background-color: #ffffff;
+  color: #1877f2;
+`;
+
+const ConfirmDelete = styled.button`
+  background-color: #1877f2;
+  color: #ffffff;
+`;
+
+const BackgroundOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 10;
 `;

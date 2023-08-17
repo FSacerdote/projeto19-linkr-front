@@ -34,7 +34,7 @@ export default function LikeButton({ postId }) {
         );
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       });
   }, [apiUrl, loggedUser, postId]);
 
