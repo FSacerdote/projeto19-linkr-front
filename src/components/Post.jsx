@@ -1,13 +1,18 @@
 import { styled } from "styled-components";
 import LikeButton from "./LikeButton";
+import { useNavigate } from "react-router-dom";
 
-export default function Post({post}) {
-  const {username, pictureUrl, description, data, url} = post
+export default function Post({ post }) {
+  const { userId, username, pictureUrl, description, data, url } = post;
+  const navigate = useNavigate();
   return (
     <Container>
       <Info>
         <User>
           <img
+            onClick={() => {
+              navigate(`/user/${userId}`);
+            }}
             src={pictureUrl}
             alt=""
           />
@@ -16,21 +21,18 @@ export default function Post({post}) {
       </Info>
       <Content>
         <UserName>{username}</UserName>
-        <Text>
-          {description}
-        </Text>
-        <PostUrl onClick={()=>{window.location.href = url;}}>
+        <Text>{description}</Text>
+        <PostUrl
+          onClick={() => {
+            window.location.href = url;
+          }}
+        >
           <TextContainer>
             <Title>{data.title}</Title>
-            <Description>
-              {data.description}
-            </Description>
+            <Description>{data.description}</Description>
             <Url>{url}</Url>
           </TextContainer>
-          <img
-            src={data.image}
-            alt=""
-          />
+          <img src={data.image} alt="" />
         </PostUrl>
       </Content>
     </Container>
@@ -60,6 +62,9 @@ const User = styled.div`
     height: 50px;
     border-radius: 27px;
   }
+  img:hover {
+    cursor: pointer;
+  }
 `;
 
 const Content = styled.div`
@@ -83,9 +88,9 @@ const Text = styled.p`
 `;
 
 const PostUrl = styled.div`
-  &:hover{
+  &:hover {
     cursor: pointer;
-    filter: brightness(.8);
+    filter: brightness(0.8);
   }
   margin-top: 20px;
   border-radius: 11px;

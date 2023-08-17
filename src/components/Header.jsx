@@ -13,6 +13,12 @@ export default function Header() {
 
   let timeout = null;
 
+  const config = {
+    headers: {
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjkyMjM3NDE0LCJleHAiOjE2OTQ4Mjk0MTR9.pTk293TceP9KoqZs0--sRtGwGxKwB6KF_miHpfEg6pc`,
+    },
+  };
+
   return (
     <Container>
       <Logo>linkr</Logo>
@@ -54,7 +60,7 @@ export default function Header() {
               try {
                 if (e.target.value.length >= 3) {
                   const res = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/users/${e.target.value}`
+                    `${process.env.REACT_APP_API_URL}/users/${e.target.value}`, config
                   );
                   setSearchList(res.data);
                   setLoading(false);
