@@ -10,7 +10,7 @@ import { ThreeDots } from "react-loader-spinner";
 
 Modal.setAppElement("#root");
 
-export default function Post({ post }) {
+export default function Post({ post, contador, setContador }) {
   const { id, userId, username, pictureUrl, description, data, url } = post;
   const [editedText, setEditedText] = useState(description);
   const [editModeText, setEditModeText] = useState(editedText);
@@ -94,6 +94,17 @@ export default function Post({ post }) {
 
   function handleDeleteConfirm() {
     console.log("Deletando");
+    axios
+      .delete(`${apiUrl}/posts/delete/${id}`, config)
+      .then((resp) => {
+        console.log(resp.data);
+        setContador(contador - 1);
+        setDeleteModalOpen(false);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setDeleteModalOpen(false);
+      });
   }
   function openDeleteModal() {
     setDeleteModalOpen(true);

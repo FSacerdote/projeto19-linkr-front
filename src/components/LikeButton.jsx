@@ -116,6 +116,7 @@ export default function LikeButton({ postId }) {
           backgroundColor: "rgb(255, 255, 255)",
           color: "#222",
           borderRadius: "3px",
+          zIndex: "1",
         }}
       />
     </>
