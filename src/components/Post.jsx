@@ -5,7 +5,7 @@ import { PiPencilFill } from "react-icons/pi";
 import { AiFillDelete } from "react-icons/ai";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { LineWave, ThreeDots } from "react-loader-spinner";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function Post({ post }) {
   const { id, userId, username, pictureUrl, description, data, url } = post;
