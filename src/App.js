@@ -8,21 +8,20 @@ import { useState } from "react";
 import DataContextProvider from "./context/AuthContext";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("token"))
-  const contextValue = {token, setToken}
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const contextValue = { token, setToken };
 
   return (
     <DataContextProvider.Provider value={contextValue}>
-    <BrowserRouter>
-      <ResetCss />
-      <GlobalStyle />
-      <Routes>
-        <Route path="/timeline" element={<TimelinePage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/signin" element={<SigninPage />} />
-      </Routes>
-    </BrowserRouter>
-
+      <BrowserRouter>
+        <ResetCss />
+        <GlobalStyle />
+        <Routes>
+          <Route path="/timeline" element={<TimelinePage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/" element={<SigninPage />} />
+        </Routes>
+      </BrowserRouter>
     </DataContextProvider.Provider>
   );
 }

@@ -31,7 +31,7 @@ export default function SigninPage(){
 
       </label>
 
-      <StyledLink>First time? Create an account!</StyledLink>
+      <StyledLink to="/signup">First time? Create an account!</StyledLink>
     </Container>
     </Body>
       
