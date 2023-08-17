@@ -12,16 +12,24 @@ export function UserPage() {
   const [postList, setPostList] = useState([]);
   const [userInfo, setUserInfo] = useState({});
 
+  const config = {
+    headers: {
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjkyMjM3NDE0LCJleHAiOjE2OTQ4Mjk0MTR9.pTk293TceP9KoqZs0--sRtGwGxKwB6KF_miHpfEg6pc`,
+    },
+  };
+
   useEffect(() => {
     async function getInfo() {
       try {
         const userRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/${id}/user`
+          `${process.env.REACT_APP_API_URL}/${id}/user`,
+          config
         );
         setUserInfo(userRes.data);
 
         const postRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/${id}/posts`
+          `${process.env.REACT_APP_API_URL}/${id}/posts`,
+          config
         );
         setPostList(postRes.data);
       } catch (error) {
@@ -50,7 +58,7 @@ export function UserPage() {
         </UserTitleContainer>
         {postList &&
           postList.map((post) => {
-            return <Post />;
+            return <Post post={post} />;
           })}
       </Timeline>
       <TrendingBoard></TrendingBoard>
