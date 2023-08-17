@@ -99,6 +99,7 @@ const PostUrl = styled.div`
     right: 0;
     position: absolute;
     height: 100%;
+    width: 155px;
     top: 0;
   }
 `;
