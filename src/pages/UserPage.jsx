@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { styled } from "styled-components";
 import Header from "../components/Header";
 import Post from "../components/Post";
@@ -42,7 +43,7 @@ export function UserPage() {
 
     console.log(id);
     getInfo();
-  }, [id, navigate]);
+  }, [config, id, navigate]);
 
   return (
     <Page>

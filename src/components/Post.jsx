@@ -1,6 +1,8 @@
 import { styled } from "styled-components";
 import LikeButton from "./LikeButton";
 import { useNavigate } from "react-router-dom";
+import EditPost from "./EditPost";
+import DeletePost from "./DeletePost";
 
 export default function Post({ post }) {
   const { id, userId, username, pictureUrl, description, data, url } = post;
@@ -20,7 +22,14 @@ export default function Post({ post }) {
         <LikeButton postId={id} />
       </Info>
       <Content>
-        <UserName>{username}</UserName>
+        <Top>
+          <UserName>{username}</UserName>
+          <Buttons>
+            <EditPost />
+            <DeletePost />
+          </Buttons>
+        </Top>
+
         <Text>{description}</Text>
         <PostUrl
           onClick={() => {
@@ -55,7 +64,17 @@ const Info = styled.div`
   padding-left: 18px;
   gap: 19px;
 `;
+const Top = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 19px;
+`;
 
+const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 9px;
+`;
 const User = styled.div`
   img {
     width: 50px;
@@ -76,7 +95,6 @@ const Content = styled.div`
 `;
 
 const UserName = styled.p`
-  margin-top: 19px;
   color: #fff;
   font-size: 19px;
 `;
