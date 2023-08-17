@@ -1,163 +1,127 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { styled } from "styled-components";
 import { Tooltip } from "react-tooltip";
+import { styled } from "styled-components";
 
-export default function LikeButton({ postId }) {
+export default function LikeButton() {
   const [likes, setLikes] = useState(0);
   const [users, setUsers] = useState([]);
   const [heart, setHeart] = useState(false);
   const [tooltip, setTooltip] = useState("");
-  const heartAtual = heart ? <Heart /> : <HeartOutline />;
+  const [loggedUser, setLoggedUser] = useState("nathan");
 
-  //const [token] = useContext();
+  const postId = 1;
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc";
 
   const apiUrl = process.env.REACT_APP_API_URL;
-  /* TO-DO 
-        - adicionar o context de autenticação
-        - fazer requisição com a api
-        - preciso saber como o componente Post irá ser criado 
-    */
-  function createTooltip() {
-    const likedByCurrentUser = heart;
-    const currentUser = users[0];
-    const firstOtherUser = users[1];
-    const remainingUsers = Math.max(likes - 2, 0);
 
-    let tooltipContent = "";
-
-    if (likedByCurrentUser) {
-      if (likes === 1) {
-        tooltipContent = "Você curtiu";
-      } else if (likes === 2) {
-        tooltipContent = `Você e ${firstOtherUser} curtiram`;
-      } else if (remainingUsers === 0) {
-        tooltipContent = "Você e outras pessoas curtiram";
-      } else {
-        tooltipContent = `Você, ${firstOtherUser} e outras ${remainingUsers} pessoa${
-          remainingUsers !== 1 ? "s" : ""
-        }`;
-      }
-    } else {
-      if (likes === 1) {
-        tooltipContent = `${currentUser} curtiu`;
-      } else if (likes === 2) {
-        tooltipContent = `${currentUser} e ${firstOtherUser} curtiram`;
-      } else if (remainingUsers === 0) {
-        tooltipContent = "Ninguém curtiu ainda";
-      } else {
-        tooltipContent = `${currentUser}, ${firstOtherUser} e outras ${remainingUsers} pessoa${
-          remainingUsers !== 1 ? "s" : ""
-        }`;
-      }
-    }
-    setTooltip(tooltipContent);
-  }
-
-  useEffect(() => {
-    createTooltip();
-  });
-
-  /*  useEffect(() => {
+  const fetchLikesAndUsers = useCallback(() => {
     const config = {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc`,
+        Authorization: `Bearer ${token}`,
       },
     };
-    axios.get(`${apiUrl}/post/${postId}/likes`, config).then((resp) => {
-      console.log(resp.data);
-      setLikes(resp.data.likeCount);
-      setUsers(resp.data.likedUsers)
-    }); 
-  }, [apiUrl, postId]); */
 
-  function handleLike() {
-    console.log(postId);
-    /* const config = {
+    axios
+      .get(`${apiUrl}/post/${postId}/likes`, config)
+      .then((resp) => {
+        setLikes(resp.data.likeCount);
+        setUsers(resp.data.likedUsers.map((user) => user.username));
+        setHeart(
+          resp.data.likedUsers.some((user) => user.username === loggedUser)
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [apiUrl, loggedUser]);
+
+  useEffect(() => {
+    fetchLikesAndUsers();
+  }, [fetchLikesAndUsers]);
+
+  const handleLike = () => {
+    const config = {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc`,
+        Authorization: `Bearer ${token}`,
       },
-    }; */
-    setHeart(!heart);
-    if (!heart) {
-      // TO-DO substituir com o token do use Context
+    };
 
-      /* axios
-        .post(`${apiUrl}/like/${postId}`, config)
-        .then((resp) => {
-          console.log(resp.data);
-        })
-        .catch((err) => {
-          console.log(err.response);
-        }); */
-      setUsers(["Você"]);
-      setLikes(likes + 1);
-    } else {
-      /*
+    setHeart((prevHeart) => !prevHeart);
+
+    if (heart) {
       axios
         .delete(`${apiUrl}/like/${postId}`, config)
         .then((resp) => {
           console.log(resp.data);
+          fetchLikesAndUsers(); // Fetch atualizado após ação de like/deslike
         })
         .catch((err) => {
           console.log(err.response);
-        }); */
-      setUsers([]);
-      setLikes(likes - 1);
+        });
+    } else {
+      axios
+        .post(`${apiUrl}/like/${postId}`, null, config)
+        .then((resp) => {
+          console.log(resp.data);
+          fetchLikesAndUsers(); // Fetch atualizado após ação de like/deslike
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
     }
-  }
+  };
 
-  /* function handleMouseEnter() {
-    console.log(heart);
-    console.log(likes);
-    console.log(users);
-    if (heart) {
-      if (likes >= 2) {
-        // Caso tenha mais de 1 curtida
-        const others = likes - 2;
-        const additionalPerson = likes === 2 ? `Você e ${users[1]}` : users[1];
-        return `Você, ${additionalPerson} e outras ${others} pessoa${
-          others > 1 ? "s" : ""
-        }`;
-      } else {
-        // Caso tenha apenas 1 curtida
-        return "Você curtiu";
-      }
-    } else if (!heart) {
-      if (likes >= 2) {
-        // Caso tenha mais de 1 curtida
-        const others = likes - 2;
-        const additionalPerson = `${users[0]}, ${users[1]}`;
-        return `${additionalPerson} e outras ${others} pessoa${
-          others > 1 ? "s" : ""
-        }`;
-      } else if (likes === 1) {
-        // Caso tenha apenas 1 curtida
-        return `${users[0]} curtiu`;
-      }
+  const heartIcon = heart ? <Heart /> : <HeartOutline />;
+
+  const tooltipContent = useMemo(() => {
+    if (likes === 1) {
+      return heart ? "Você curtiu" : `${users[0]} curtiu`;
+    } else if (likes === 2) {
+      return heart
+        ? `Você e ${users[0]} curtiram`
+        : `${users[0]} e ${users[1]} curtiram`;
+    } else if (likes > 2) {
+      const remaining = likes - 2;
+      return heart
+        ? `Você, ${users[0]} e outras ${remaining} pessoa${
+            remaining !== 1 ? "s" : ""
+          } curtiram`
+        : `${users.slice(0, 2).join(", ")} e outras ${remaining} pessoa${
+            remaining !== 1 ? "s" : ""
+          } curtiram`;
+    } else {
+      return heart ? "Você curtiu" : "Ninguém curtiu ainda";
     }
-  } */
+  }, [heart, likes, users]);
 
   return (
     <>
       <SCLikeButton
         data-tooltip-id="my-tooltip"
         data-tooltip-place="bottom"
-        data-tooltip-content={tooltip}
+        data-tooltip-content={tooltipContent}
         onClick={handleLike}
       >
-        <button>{heartAtual}</button>
+        <button>{heartIcon}</button>
         <LikeCount>
           {likes} <span>{likes === 1 ? "like" : "likes"}</span>
         </LikeCount>
       </SCLikeButton>
-      <Tooltip id="my-tooltip" />
+      <Tooltip
+        id="my-tooltip"
+        style={{
+          backgroundColor: "rgb(255, 255, 255)",
+          color: "#222",
+          borderRadius: "3px",
+        }}
+      />
     </>
   );
 }
-
 const SCLikeButton = styled.div`
   display: flex;
   flex-direction: column;

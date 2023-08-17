@@ -62,16 +62,21 @@ export default function TimelinePage() {
 }
 
 const Page = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   background-color: #333;
   padding-top: 72px;
   display: flex;
   justify-content: center;
+
+  @media (max-width: 1000px) {
+    flex-direction: column-reverse;
+    align-items: center;
+    padding: 0 20px;
+  }
 `;
 
 const Timeline = styled.div`
   padding-bottom: 20px;
-  overflow: scroll;
   margin-top: 53px;
   width: 611px;
   display: flex;
@@ -90,5 +95,8 @@ const Timeline = styled.div`
     font-size: 43px;
     font-weight: 700;
     text-align: center;
+  }
+  @media (max-width: 1000px) {
+    margin-top: 20px;
   }
 `;

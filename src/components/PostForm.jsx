@@ -46,26 +46,26 @@ export default function PostForm ({contador, setContador}){
 }
 
 const Container = styled.div`
-    flex-shrink: 0;
-    margin-top: 43px;
-    height: 209px;
-    width: 100%;
-    border-radius: 16px;
-    background-color: white;
-    display: flex;
-    padding-right: 21px;
-    margin-bottom: 13px;
-`
+  flex-shrink: 0;
+  margin-top: 43px;
+  height: 209px;
+  width: 100%;
+  border-radius: 16px;
+  background-color: white;
+  display: flex;
+  padding-right: 21px;
+  margin-bottom: 13px;
+`;
 
 const User = styled.div`
-    margin-top: 16px;
-    margin-left: 18px;
-    img{
-        width: 50px;
-        height: 50px;
-        border-radius: 27px;
-    }
-`
+  margin-top: 16px;
+  margin-left: 18px;
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 27px;
+  }
+`;
 
 const Form = styled.form`
     position: relative;
@@ -124,7 +124,7 @@ const Description = styled.textarea`
     background-color: #EFEFEF;
     border: none;
     border-radius: 5px;
-    font-family: 'Lato', sans-serif;
+    font-family: "Lato", sans-serif;
     font-size: 15px;
     font-weight: 300;
     padding-left: 12px;
