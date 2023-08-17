@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
 import axios from "axios";
@@ -40,6 +41,11 @@ export default function SignupPage(){
     })
   }
 
+
+import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
+
+export default function SignupPage(){
+
   return(
     <Body>
       <Sidebar>
@@ -52,6 +58,7 @@ export default function SignupPage(){
 
     <Container>
       <label>
+
       <form onSubmit={userRegister}>
         <input
           type="email"
@@ -61,24 +68,42 @@ export default function SignupPage(){
           name="email"
           required
           disabled={isDisable}
+
+      <form>
+        <input
+          type="email"
+          placeholder="e-mail"
+          name="email"
+          required
+
         />
         <input
           type="password"
           placeholder="password"
+
           value={formData.password}
           onChange={handleChange}
           name="password"
           required
           disabled={isDisable}
+
+          name="password"
+          required
+
         />
         <input
           type="text"
           placeholder="username"
+
           value={formData.username}
           onChange={handleChange}
           name="username"
           required
           disabled={isDisable}
+
+          name="username"
+          required
+
         />
         <input
           type="url"
@@ -90,14 +115,28 @@ export default function SignupPage(){
           disabled={isDisable}
         />
       <button type="submit" disabled={isDisable}>Sign Up</button>
+
+          name="pictureUrl"
+          required
+        />
+      <button>Sign Up</button>
+
       </form>
 
       </label>
 
+
       <StyledLink to="/">Switch back to log in</StyledLink>
+
+      <StyledLink>Switch back to log in</StyledLink>
+
     </Container>
     </Body>
       
   )
 
+
 }
+
+}
+
