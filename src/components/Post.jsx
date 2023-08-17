@@ -1,35 +1,34 @@
 import { styled } from "styled-components";
 import LikeButton from "./LikeButton";
 
-export default function Post() {
+export default function Post({post}) {
+  const {username, pictureUrl, description, data, url} = post
   return (
     <Container>
       <Info>
         <User>
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+            src={pictureUrl}
             alt=""
           />
         </User>
         <LikeButton />
       </Info>
       <Content>
-        <UserName>Juvenal Juvêncio</UserName>
+        <UserName>{username}</UserName>
         <Text>
-          Muito maneiro esse tutorial de Material UI com React, deem uma olhada!
+          {description}
         </Text>
-        <PostUrl>
+        <PostUrl onClick={()=>{window.location.href = url;}}>
           <TextContainer>
-            <Title>Como aplicar o Material UI em um projeto React</Title>
+            <Title>{data.title}</Title>
             <Description>
-              Hey! I have moved this tutorial to my personal blog. Same content,
-              new location. Sorry about making you click through to another
-              page.
+              {data.description}
             </Description>
-            <Url>https://medium.com/@pshrmn/a-simple-react-router</Url>
+            <Url>{url}</Url>
           </TextContainer>
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+            src={data.image}
             alt=""
           />
         </PostUrl>
@@ -40,7 +39,6 @@ export default function Post() {
 
 const Container = styled.div`
   margin-top: 16px;
-  height: 276px;
   border-radius: 16px;
   background: #171717;
   display: flex;
@@ -85,17 +83,23 @@ const Text = styled.p`
 `;
 
 const PostUrl = styled.div`
+  &:hover{
+    cursor: pointer;
+    filter: brightness(.8);
+  }
   margin-top: 20px;
   border-radius: 11px;
   border: 1px solid #4d4d4d;
   background: rgba(196, 196, 196, 0);
   height: 155px;
   position: relative;
+  min-width: 503px;
   img {
     border-radius: 0 11px 11px 0;
     right: 0;
     position: absolute;
     height: 100%;
+    width: 155px;
     top: 0;
   }
 `;
