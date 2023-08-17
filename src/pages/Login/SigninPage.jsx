@@ -33,8 +33,6 @@ export default function SigninPage(){
 
       <StyledLink to="/signup">First time? Create an account!</StyledLink>
 
-      <StyledLink>First time? Create an account!</StyledLink>
-
     </Container>
     </Body>
       
