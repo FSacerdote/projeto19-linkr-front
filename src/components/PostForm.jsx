@@ -7,9 +7,12 @@ export default function PostForm({ contador, setContador }) {
   const [description, setDescription] = useState("");
   const [habilitado, setHabilitado] = useState(false);
 
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc";
+
   const config = {
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjkyMTYxOTc5LCJleHAiOjE2OTQ3NTM5Nzl9.vPyTUyhgbh2FXzjq4fbbjWXTICseCRA3FkmA2rqknGI`,
+      Authorization: `Bearer ${token}`,
     },
   };
 
