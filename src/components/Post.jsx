@@ -1,13 +1,21 @@
 import { styled } from "styled-components";
 import LikeButton from "./LikeButton";
+import { useNavigate } from "react-router-dom";
 
 export default function Post({ post }) {
-  const { id, username, pictureUrl, description, data, url } = post;
+  const { id, userId, username, pictureUrl, description, data, url } = post;
+  const navigate = useNavigate();
   return (
     <Container>
       <Info>
         <User>
-          <img src={pictureUrl} alt="" />
+          <img
+            onClick={() => {
+              navigate(`/user/${userId}`);
+            }}
+            src={pictureUrl}
+            alt=""
+          />
         </User>
         <LikeButton postId={id} />
       </Info>
@@ -53,6 +61,9 @@ const User = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 27px;
+  }
+  img:hover {
+    cursor: pointer;
   }
 `;
 
