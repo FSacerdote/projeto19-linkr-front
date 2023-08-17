@@ -5,6 +5,7 @@ import { PiPencilFill } from "react-icons/pi";
 import { AiFillDelete } from "react-icons/ai";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { LineWave, ThreeDots } from "react-loader-spinner";
 
 export default function Post({ post }) {
   const { id, userId, username, pictureUrl, description, data, url } = post;
@@ -16,6 +17,7 @@ export default function Post({ post }) {
 
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc";
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -47,9 +49,7 @@ export default function Post({ post }) {
 
   function handleInputBlur() {
     setIsEditing(false);
-    if (!isEditing) {
-      setEditedText(description); // Define o valor original ao cancelar a edição
-    }
+    setEditedText(editModeText);
   }
 
   function handleDelete() {
@@ -59,30 +59,28 @@ export default function Post({ post }) {
   async function handleKeyDown(event) {
     if (event.key === "Enter") {
       setLoading(true);
-      const editedPost = {
+
+      const editPostForm = {
         url,
         description: editedText,
       };
-      console.log(editedPost);
 
-      //requisição
       axios
-        .put(`${apiUrl}/posts/edit/${id}`, editedPost, config)
+        .put(`${apiUrl}/posts/edit/${id}`, editPostForm, config)
         .then((resp) => {
           console.log(resp.data);
-          setEditedText(resp.data.description);
+          setEditedText(editedText);
+          setLoading(false);
+          setIsEditing(false);
         })
         .catch((err) => {
           setEditedText(editModeText);
           setIsEditing(false);
           alert("Erro ao atualizar o post");
         });
-
-      setLoading(false);
-      setIsEditing(false);
     } else if (event.key === "Escape") {
-      setEditedText(description);
       setIsEditing(false);
+      setEditedText(description);
     }
   }
 
@@ -116,7 +114,7 @@ export default function Post({ post }) {
             <DeleteIcon onClick={handleDelete} />
           </Buttons>
         </Top>
-        {isEditing ? (
+        {isEditing && !loading ? (
           <EditingPost
             ref={editFieldRef}
             type="text"
@@ -124,10 +122,24 @@ export default function Post({ post }) {
             onChange={handleInputChange}
             onBlur={handleInputBlur}
             onKeyDown={handleKeyDown}
-            disabled={loading}
           />
         ) : (
-          <Text>{editedText}</Text>
+          <Text>
+            {loading ? (
+              <ThreeDots
+                height="19"
+                width="30"
+                radius="9"
+                color="#b7b7b7"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClassName=""
+                visible={true}
+              />
+            ) : (
+              editedText
+            )}
+          </Text>
         )}
 
         <PostUrl
