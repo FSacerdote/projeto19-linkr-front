@@ -1,6 +1,5 @@
-import { Body, Container, Sidebar, StyledLink } from "../../style/FormsStyle"
-
-export default function SignupPage(){
+import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
+export default function SigninPage(){
   return(
     <Body>
       <Sidebar>
@@ -26,24 +25,13 @@ export default function SignupPage(){
           name="password"
           required
         />
-        <input
-          type="text"
-          placeholder="username"
-          name="username"
-          required
-        />
-        <input
-          type="url"
-          placeholder="picture url"
-          name="pictureUrl"
-          required
-        />
-      <button>Sign Up</button>
+       
+      <button>Log In</button>
       </form>
 
       </label>
 
-      <StyledLink>Switch back to log in</StyledLink>
+      <StyledLink>First time? Create an account!</StyledLink>
     </Container>
     </Body>
       
