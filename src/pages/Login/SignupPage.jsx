@@ -53,7 +53,6 @@ export default function SignupPage() {
           <span>save, share and sicover the best links on the web</span>
         </div>
       </Sidebar>
-
       <Container>
         <label>
           <form onSubmit={userRegister}>
@@ -106,3 +105,6 @@ export default function SignupPage() {
     </Body>
   );
 }
+
+}
+

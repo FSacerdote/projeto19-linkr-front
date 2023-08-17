@@ -4,10 +4,8 @@ import GlobalStyle from "./style/GlobalStyle";
 import TimelinePage from "./pages/TimelinePage";
 import SignupPage from "./pages/Login/SignupPage";
 import SigninPage from "./pages/Login/SigninPage";
-
 import { useState } from "react";
 import DataContextProvider from "./context/AuthContext";
-
 import HashtagPage from "./pages/HashtagPage";
 import { UserPage } from "./pages/UserPage";
 
