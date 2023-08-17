@@ -6,6 +6,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
+import { Tagify } from "react-tagify";
 
 export default function Post({ post }) {
   const { id, userId, username, pictureUrl, description, data, url } = post;
@@ -124,22 +125,27 @@ export default function Post({ post }) {
             onKeyDown={handleKeyDown}
           />
         ) : (
-          <Text>
-            {loading ? (
-              <ThreeDots
-                height="19"
-                width="30"
-                radius="9"
-                color="#b7b7b7"
-                ariaLabel="three-dots-loading"
-                wrapperStyle={{}}
-                wrapperClassName=""
-                visible={true}
-              />
-            ) : (
-              editedText
-            )}
-          </Text>
+          <Tagify
+            onClick={(text) => navigate(`/hashtag/${text}`)}
+            tagStyle={{ color: "#ffffff", fontWeight: 700, cursor: "pointer"}}
+          >
+            <Text>
+              {loading ? (
+                <ThreeDots
+                  height="19"
+                  width="30"
+                  radius="9"
+                  color="#b7b7b7"
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClassName=""
+                  visible={true}
+                />
+              ) : (
+                editedText
+              )}
+            </Text>
+          </Tagify>
         )}
 
         <PostUrl
