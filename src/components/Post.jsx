@@ -2,10 +2,98 @@ import { styled } from "styled-components";
 import LikeButton from "./LikeButton";
 import { useNavigate } from "react-router-dom";
 import { PiPencilFill } from "react-icons/pi";
+import { AiFillDelete } from "react-icons/ai";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 export default function Post({ post }) {
   const { id, userId, username, pictureUrl, description, data, url } = post;
+  const [editedText, setEditedText] = useState(description);
+  const [editModeText, setEditModeText] = useState(editedText);
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc";
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const editFieldRef = useRef();
+
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  function handleEdit() {
+    console.log("Editando");
+    if (isEditing) {
+      setEditedText(editModeText);
+      setIsEditing(false);
+    } else {
+      setEditModeText(editedText);
+    }
+    setIsEditing(!isEditing);
+  }
+
+  function handleInputChange(e) {
+    const input = e.target.value;
+
+    setEditedText(input);
+
+    console.log("Texto está mudando");
+  }
+
+  function handleInputBlur() {
+    setIsEditing(false);
+    if (!isEditing) {
+      setEditedText(description); // Define o valor original ao cancelar a edição
+    }
+  }
+
+  function handleDelete() {
+    console.log("Deletando");
+  }
+
+  async function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      setLoading(true);
+      const editedPost = {
+        url,
+        description: editedText,
+      };
+      console.log(editedPost);
+
+      //requisição
+      axios
+        .put(`${apiUrl}/posts/edit/${id}`, editedPost, config)
+        .then((resp) => {
+          console.log(resp.data);
+          setEditedText(resp.data.description);
+        })
+        .catch((err) => {
+          setEditedText(editModeText);
+          setIsEditing(false);
+          alert("Erro ao atualizar o post");
+        });
+
+      setLoading(false);
+      setIsEditing(false);
+    } else if (event.key === "Escape") {
+      setEditedText(description);
+      setIsEditing(false);
+    }
+  }
+
+  useEffect(() => {
+    if (isEditing) {
+      editFieldRef.current.focus();
+      editFieldRef.current.selectionStart = editFieldRef.current.value.length;
+      editFieldRef.current.selectionEnd = editFieldRef.current.value.length;
+    }
+  }, [isEditing]);
+
   return (
     <Container>
       <Info>
@@ -24,11 +112,24 @@ export default function Post({ post }) {
         <Top>
           <UserName>{username}</UserName>
           <Buttons>
-            <EditIcon />
+            <EditIcon onClick={handleEdit} />
+            <DeleteIcon onClick={handleDelete} />
           </Buttons>
         </Top>
+        {isEditing ? (
+          <EditingPost
+            ref={editFieldRef}
+            type="text"
+            value={editedText}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            onKeyDown={handleKeyDown}
+            disabled={loading}
+          />
+        ) : (
+          <Text>{editedText}</Text>
+        )}
 
-        <Text>{description}</Text>
         <PostUrl
           onClick={() => {
             window.location.href = url;
@@ -163,4 +264,25 @@ const EditIcon = styled(PiPencilFill)`
   font-size: 20px;
   cursor: pointer;
   color: #fff;
+`;
+
+const DeleteIcon = styled(AiFillDelete)`
+  font-size: 20px;
+  display: flex;
+  cursor: pointer;
+  color: #fff;
+`;
+
+const EditingPost = styled.textarea`
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: #4c4c4c;
+  font-family: Lato;
+  font-size: 17px;
+  border: none;
+  border-radius: 7px;
+  resize: none;
+  &:focus {
+    outline: none;
+  }
 `;
