@@ -1,36 +1,30 @@
 import { styled } from "styled-components";
 import LikeButton from "./LikeButton";
 
-export default function Post({post}) {
-  const {username, pictureUrl, description, data, url} = post
+export default function Post({ post }) {
+  const { id, username, pictureUrl, description, data, url } = post;
   return (
     <Container>
       <Info>
         <User>
-          <img
-            src={pictureUrl}
-            alt=""
-          />
+          <img src={pictureUrl} alt="" />
         </User>
-        <LikeButton />
+        <LikeButton postId={id} />
       </Info>
       <Content>
         <UserName>{username}</UserName>
-        <Text>
-          {description}
-        </Text>
-        <PostUrl onClick={()=>{window.location.href = url;}}>
+        <Text>{description}</Text>
+        <PostUrl
+          onClick={() => {
+            window.location.href = url;
+          }}
+        >
           <TextContainer>
             <Title>{data.title}</Title>
-            <Description>
-              {data.description}
-            </Description>
+            <Description>{data.description}</Description>
             <Url>{url}</Url>
           </TextContainer>
-          <img
-            src={data.image}
-            alt=""
-          />
+          <img src={data.image} alt="" />
         </PostUrl>
       </Content>
     </Container>
@@ -83,9 +77,9 @@ const Text = styled.p`
 `;
 
 const PostUrl = styled.div`
-  &:hover{
+  &:hover {
     cursor: pointer;
-    filter: brightness(.8);
+    filter: brightness(0.8);
   }
   margin-top: 20px;
   border-radius: 11px;
