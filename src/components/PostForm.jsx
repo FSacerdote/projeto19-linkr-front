@@ -2,7 +2,7 @@ import axios from "axios"
 import { useState } from "react"
 import { styled } from "styled-components"
 
-export default function PostForm (){
+export default function PostForm ({contador, setContador}){
 
     const [url, setUrl] = useState("")
     const [description, setDescription] = useState("")
@@ -17,12 +17,12 @@ export default function PostForm (){
     function newPost(event){
         event.preventDefault()
         setHabilitado(true)
-        axios.post(`http://localhost:5000/posts`, {url, description} , config)
+        axios.post(`${process.env.REACT_APP_API_URL}/posts`, {url, description} , config)
             .then(()=>{
                 setHabilitado(false)
                 setDescription("")
                 setUrl("")
-                // refresh nos posts
+                setContador(contador + 1)
             })
             .catch(()=>{
                 alert("Houve um erro ao publicar o seu link")
