@@ -3,7 +3,7 @@ import LikeButton from "./LikeButton";
 import { useNavigate } from "react-router-dom";
 
 export default function Post({ post }) {
-  const { userId, username, pictureUrl, description, data, url } = post;
+  const { id, userId, username, pictureUrl, description, data, url } = post;
   const navigate = useNavigate();
   return (
     <Container>
@@ -17,7 +17,7 @@ export default function Post({ post }) {
             alt=""
           />
         </User>
-        <LikeButton />
+        <LikeButton postId={id} />
       </Info>
       <Content>
         <UserName>{username}</UserName>
