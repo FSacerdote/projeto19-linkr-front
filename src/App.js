@@ -5,6 +5,12 @@ import TimelinePage from "./pages/TimelinePage";
 import SignupPage from "./pages/Login/SignupPage";
 import SigninPage from "./pages/Login/SigninPage";
 
+
+import HashtagPage from "./pages/HashtagPage"
+import { UserPage } from "./pages/UserPage";
+
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -12,8 +18,13 @@ function App() {
       <GlobalStyle />
       <Routes>
         <Route path="/timeline" element={<TimelinePage />} />
+
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/signin" element={<SigninPage />} />
+
+
+        <Route path="/user/:id?" element={<UserPage />} />
+        <Route path="/hashtag/:hashtag" element={<HashtagPage />} />
       </Routes>
     </BrowserRouter>
   );
