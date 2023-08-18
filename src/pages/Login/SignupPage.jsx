@@ -41,6 +41,7 @@ export default function SignupPage() {
         );
       } else {
         alert(error.message);
+        console.log(error)
       }
       setIsDisable(false);
     });
