@@ -21,6 +21,9 @@ export default function SignupPage() {
 
   function userRegister(e) {
     e.preventDefault();
+    if(formData.email === "" || formData.username === "" || formData.password === "" || formData.pictureUrl === "") {
+      return alert("Preencha os campos corretamente");
+    }
     setIsDisable(true);
 
     const promise = axios.post(
@@ -62,7 +65,6 @@ export default function SignupPage() {
               value={formData.email}
               onChange={handleChange}
               name="email"
-              required
               disabled={isDisable}
             />
             <input
@@ -71,7 +73,6 @@ export default function SignupPage() {
               value={formData.password}
               onChange={handleChange}
               name="password"
-              required
               disabled={isDisable}
             />
             <input
@@ -80,7 +81,6 @@ export default function SignupPage() {
               value={formData.username}
               onChange={handleChange}
               name="username"
-              required
               disabled={isDisable}
             />
             <input
@@ -89,7 +89,6 @@ export default function SignupPage() {
               value={formData.pictureUrl}
               onChange={handleChange}
               name="pictureUrl"
-              required
               disabled={isDisable}
             />
             <button type="submit" disabled={isDisable}>
@@ -99,12 +98,7 @@ export default function SignupPage() {
         </label>
 
         <StyledLink to="/">Switch back to log in</StyledLink>
-
-        <StyledLink>Switch back to log in</StyledLink>
       </Container>
     </Body>
   );
 }
-
-}
-
