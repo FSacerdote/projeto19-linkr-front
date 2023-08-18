@@ -17,8 +17,17 @@ export default function Header() {
   const { config } = useContext(DataContextProvider);
 
   return (
-    <Container>
-      <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
+    <>
+      <Container>
+        <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
+
+        <User>
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+            alt=""
+          />
+        </User>
+      </Container>
       <SearchContainer>
         <SearchBar
           data-test="search"
@@ -73,13 +82,7 @@ export default function Header() {
             })}
         </SearchResult>
       </SearchContainer>
-      <User>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-          alt=""
-        />
-      </User>
-    </Container>
+    </>
   );
 }
 
@@ -92,8 +95,9 @@ const SearchIcon = styled(AiOutlineSearch)`
 
   z-index: 5;
   @media (max-width: 1000px) {
-    top: 12px;
+    top: 96px;
     font-size: 38px;
+    right: 5%;
   }
 `;
 
@@ -106,13 +110,12 @@ const SearchContainer = styled.div`
     position: fixed;
   }
 
-  z-index: 5;
+  z-index: 4;
 
   @media (max-width: 1000px) {
-    position: absolute;
-    top: 85px;
-    right: 15px;
-    left: 15px;
+    position: static;
+    top: 0;
+    left: 0;
   }
 `;
 
@@ -143,10 +146,12 @@ const SearchBar = styled.input`
     color: #c6c6c6;
   }
   @media (max-width: 1000px) {
+    width: 95%;
     height: 60px;
     font-size: 24px;
     padding: 20px;
-    right: 0;
+    top: 85px;
+    left: 2.5%;
   }
 `;
 
@@ -171,7 +176,10 @@ const SearchResult = styled.ul`
   z-index: 4;
 
   @media (max-width: 1000px) {
+    width: 95%;
     padding-top: 60px;
+    top: 85px;
+    left: 2.5%;
   }
 `;
 
@@ -228,6 +236,10 @@ const Container = styled.div`
   background-color: #151515;
   padding-left: 28px;
   padding-right: 17px;
+
+  @media(max-width: 1000px){
+    z-index: 10;
+  }
 `;
 
 const Logo = styled.p`
