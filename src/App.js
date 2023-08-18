@@ -12,10 +12,17 @@ import SignupPage from "./pages/Login/SignupPage";
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [picture, setPicture] = useState(localStorage.getItem("picture"));
-  const [config, setConfig] = useState({headers:{authorization:`Bearer ${token}`}})
-  const contextValue = { token, setToken, picture, setPicture, config, setConfig };
-
-
+  const [config, setConfig] = useState({
+    headers: { authorization: `Bearer ${token}` },
+  });
+  const contextValue = {
+    token,
+    setToken,
+    picture,
+    setPicture,
+    config,
+    setConfig,
+  };
 
   return (
     <DataContextProvider.Provider value={contextValue}>
