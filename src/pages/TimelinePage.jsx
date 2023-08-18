@@ -3,18 +3,15 @@ import Header from "../components/Header";
 import PostForm from "../components/PostForm";
 import Post from "../components/Post";
 import TrendingBoard from "../components/TrendingBoard";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import axios from "axios";
+import DataContextProvider from "../context/AuthContext";
 
 export default function TimelinePage() {
   const [contador, setContador] = useState(0);
   const [message, setMessage] = useState("Loading...");
 
-  const config = {
-    headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjkyMTYxOTc5LCJleHAiOjE2OTQ3NTM5Nzl9.vPyTUyhgbh2FXzjq4fbbjWXTICseCRA3FkmA2rqknGI`,
-    },
-  };
+  const { config } = useContext(DataContextProvider);
   const configRef = useRef(config);
 
   const [posts, setPosts] = useState(undefined);

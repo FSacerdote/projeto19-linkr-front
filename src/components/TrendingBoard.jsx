@@ -1,20 +1,24 @@
 /* eslint-disable no-unused-vars */
 import { styled } from "styled-components";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import DataContextProvider from "../context/AuthContext";
 
 export default function TrendingBoard() {
   const [trending, setTrending] = useState([]);
 
+  const { config } = useContext(DataContextProvider);
+
   useEffect(() => {
-      axios
-          .get(`${process.env.REACT_APP_API_URL}/hashtags/trending?limit=10`, {
-              headers: {"Authorization" : `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjkyMTYxOTc5LCJleHAiOjE2OTQ3NTM5Nzl9.vPyTUyhgbh2FXzjq4fbbjWXTICseCRA3FkmA2rqknGI` },
-          })
-          .then((response) => setTrending(response.data))
-          .catch((error) => console.log(error));
-  }, [])
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/hashtags/trending?limit=10`,
+        config
+      )
+      .then((response) => setTrending(response.data))
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <Board>

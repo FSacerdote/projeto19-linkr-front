@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { styled } from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
+import DataContextProvider from "../context/AuthContext";
 
 export default function Header() {
   const [searchList, setSearchList] = useState([]);
@@ -13,15 +14,11 @@ export default function Header() {
 
   let timeout = null;
 
-  const config = {
-    headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjkyMjM3NDE0LCJleHAiOjE2OTQ4Mjk0MTR9.pTk293TceP9KoqZs0--sRtGwGxKwB6KF_miHpfEg6pc`,
-    },
-  };
+  const { config } = useContext(DataContextProvider);
 
   return (
     <Container>
-      <Logo>linkr</Logo>
+      <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
       <SearchResult>
         {!loading &&
           focus &&
@@ -60,7 +57,8 @@ export default function Header() {
               try {
                 if (e.target.value.length >= 3) {
                   const res = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/users/${e.target.value}`, config
+                    `${process.env.REACT_APP_API_URL}/users/${e.target.value}`,
+                    config
                   );
                   setSearchList(res.data);
                   setLoading(false);
@@ -203,6 +201,10 @@ const Logo = styled.p`
   font-size: 49px;
   font-weight: 700;
   letter-spacing: 2.45px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const User = styled.div`
