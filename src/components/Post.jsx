@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
+import { Tagify } from "react-tagify";
 
 Modal.setAppElement("#root");
 
@@ -157,7 +158,27 @@ export default function Post({ post, contador, setContador }) {
             visible={true}
           />
         ) : (
-          <Text>{editedText}</Text>
+          <Tagify
+            onClick={(text) => navigate(`/hashtag/${text}`)}
+            tagStyle={{ color: "#ffffff", fontWeight: 700, cursor: "pointer"}}
+          >
+            <Text>
+              {loading ? (
+                <ThreeDots
+                  height="19"
+                  width="30"
+                  radius="9"
+                  color="#b7b7b7"
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClassName=""
+                  visible={true}
+                />
+              ) : (
+                editedText
+              )}
+            </Text>
+          </Tagify>
         )}
 
         <PostUrl
