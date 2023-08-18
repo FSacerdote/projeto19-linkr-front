@@ -5,13 +5,12 @@ export default function SigninPage(){
       <Sidebar>
         <div>
         <h1>linkr</h1>
-        <span>save, share and sicover the best links on the web</span>
+        <span>save, share and discover the best links on the web</span>
 
         </div>
       </Sidebar>
 
     <Container>
-      <label>
       <form>
         <input
           type="email"
@@ -27,14 +26,8 @@ export default function SigninPage(){
         />
        
       <button>Log In</button>
-      </form>
-
-      </label>
-
       <StyledLink to="/signup">First time? Create an account!</StyledLink>
-
-      <StyledLink>First time? Create an account!</StyledLink>
-
+      </form>
     </Container>
     </Body>
       

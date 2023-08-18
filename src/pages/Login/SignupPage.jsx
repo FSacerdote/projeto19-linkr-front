@@ -53,11 +53,10 @@ export default function SignupPage() {
       <Sidebar>
         <div>
           <h1>linkr</h1>
-          <span>save, share and sicover the best links on the web</span>
+          <span>save, share and discover the best links on the web</span>
         </div>
       </Sidebar>
       <Container>
-        <label>
           <form onSubmit={userRegister}>
             <input
               type="email"
@@ -94,10 +93,8 @@ export default function SignupPage() {
             <button type="submit" disabled={isDisable}>
               Sign Up
             </button>
+            <StyledLink to="/">Switch back to log in</StyledLink>
           </form>
-        </label>
-
-        <StyledLink to="/">Switch back to log in</StyledLink>
       </Container>
     </Body>
   );
