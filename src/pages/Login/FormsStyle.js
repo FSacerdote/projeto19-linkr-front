@@ -71,8 +71,9 @@ export const Container = styled.div`
     form {
       width: 100%;
     }
-    
-    input, button {
+
+    input,
+    button {
       max-width: 500px;
       width: 100%;
       height: 55px;
@@ -91,7 +92,7 @@ export const StyledLink = styled(Link)`
   width: fit-content;
 
   @media (max-width: 950px) {
-      font-size: 17px;
+    font-size: 17px;
   }
 `;
 

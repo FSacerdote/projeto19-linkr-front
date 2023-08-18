@@ -23,7 +23,12 @@ export default function SignupPage() {
 
   function userRegister(e) {
     e.preventDefault();
-    if(formData.email === "" || formData.username === "" || formData.password === "" || formData.pictureUrl === "") {
+    if (
+      formData.email === "" ||
+      formData.username === "" ||
+      formData.password === "" ||
+      formData.pictureUrl === ""
+    ) {
       return alert("Preencha os campos corretamente");
     }
     setIsDisable(true);
@@ -44,7 +49,7 @@ export default function SignupPage() {
         );
       } else {
         alert(error.message);
-        console.log(error)
+        console.log(error);
       }
       setIsDisable(false);
     });
@@ -59,44 +64,48 @@ export default function SignupPage() {
         </div>
       </Sidebar>
       <Container>
-          <form onSubmit={userRegister}>
-            <input
-              type="email"
-              placeholder="e-mail"
-              value={formData.email}
-              onChange={handleChange}
-              name="email"
-              disabled={isDisable}
-            />
-            <input
-              type="password"
-              placeholder="password"
-              value={formData.password}
-              onChange={handleChange}
-              name="password"
-              disabled={isDisable}
-            />
-            <input
-              type="text"
-              placeholder="username"
-              value={formData.username}
-              onChange={handleChange}
-              name="username"
-              disabled={isDisable}
-            />
-            <input
-              type="url"
-              placeholder="picture url"
-              value={formData.pictureUrl}
-              onChange={handleChange}
-              name="pictureUrl"
-              disabled={isDisable}
-            />
-            <button type="submit" disabled={isDisable}>
-              {isDisable ? <ThreeDots height="13px" color="#ffffff" /> : "Sign Up"}
-            </button>
-            <StyledLink to="/">Switch back to log in</StyledLink>
-          </form>
+        <form onSubmit={userRegister}>
+          <input
+            type="email"
+            placeholder="e-mail"
+            value={formData.email}
+            onChange={handleChange}
+            name="email"
+            disabled={isDisable}
+          />
+          <input
+            type="password"
+            placeholder="password"
+            value={formData.password}
+            onChange={handleChange}
+            name="password"
+            disabled={isDisable}
+          />
+          <input
+            type="text"
+            placeholder="username"
+            value={formData.username}
+            onChange={handleChange}
+            name="username"
+            disabled={isDisable}
+          />
+          <input
+            type="url"
+            placeholder="picture url"
+            value={formData.pictureUrl}
+            onChange={handleChange}
+            name="pictureUrl"
+            disabled={isDisable}
+          />
+          <button type="submit" disabled={isDisable}>
+            {isDisable ? (
+              <ThreeDots height="13px" color="#ffffff" />
+            ) : (
+              "Sign Up"
+            )}
+          </button>
+          <StyledLink to="/">Switch back to log in</StyledLink>
+        </form>
       </Container>
     </Body>
   );
