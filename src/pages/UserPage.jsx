@@ -4,8 +4,9 @@ import Header from "../components/Header";
 import Post from "../components/Post";
 import TrendingBoard from "../components/TrendingBoard";
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import DataContextProvider from "../context/AuthContext";
 
 export function UserPage() {
   const { id } = useParams();
@@ -13,11 +14,7 @@ export function UserPage() {
   const [postList, setPostList] = useState([]);
   const [userInfo, setUserInfo] = useState({});
 
-  const config = {
-    headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjkyMjM3NDE0LCJleHAiOjE2OTQ4Mjk0MTR9.pTk293TceP9KoqZs0--sRtGwGxKwB6KF_miHpfEg6pc`,
-    },
-  };
+  const { config } = useContext(DataContextProvider);
 
   useEffect(() => {
     async function getInfo() {
@@ -43,7 +40,7 @@ export function UserPage() {
 
     console.log(id);
     getInfo();
-  }, [config, id, navigate]);
+  }, []);
 
   return (
     <Page>
@@ -84,16 +81,21 @@ const UserTitleContainer = styled.div`
 `;
 
 const Page = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   background-color: #333;
   padding-top: 72px;
   display: flex;
   justify-content: center;
+
+  @media (max-width: 1000px) {
+    flex-direction: column-reverse;
+    align-items: center;
+    padding: 0 20px;
+  }
 `;
 
 const Timeline = styled.div`
   padding-bottom: 20px;
-  overflow: scroll;
   margin-top: 53px;
   width: 611px;
   display: flex;
@@ -105,5 +107,15 @@ const Timeline = styled.div`
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+  }
+  h2 {
+    color: #fff;
+    font-family: "Oswald", sans-serif;
+    font-size: 43px;
+    font-weight: 700;
+    text-align: center;
+  }
+  @media (max-width: 1000px) {
+    margin-top: 20px;
   }
 `;

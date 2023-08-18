@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
 import axios from "axios";
@@ -38,11 +39,12 @@ export default function SignupPage() {
     });
     promise.catch((error) => {
       if (error.response && error.response.status === 409) {
-        return alert(
+        alert(
           `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
         );
       } else {
         alert(error.message);
+        console.log(error)
       }
       setIsDisable(false);
     });

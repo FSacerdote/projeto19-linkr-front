@@ -2,16 +2,27 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ResetCss from "./style/ResetCss";
 import GlobalStyle from "./style/GlobalStyle";
 import TimelinePage from "./pages/TimelinePage";
-import SignupPage from "./pages/Login/SignupPage";
-import SigninPage from "./pages/Login/SigninPage";
 import { useState } from "react";
 import DataContextProvider from "./context/AuthContext";
 import HashtagPage from "./pages/HashtagPage";
 import { UserPage } from "./pages/UserPage";
+import SigninPage from "./pages/Login/SigninPage";
+import SignupPage from "./pages/Login/SignupPage";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const contextValue = { token, setToken };
+  const [picture, setPicture] = useState(localStorage.getItem("picture"));
+  const [config, setConfig] = useState({
+    headers: { authorization: `Bearer ${token}` },
+  });
+  const contextValue = {
+    token,
+    setToken,
+    picture,
+    setPicture,
+    config,
+    setConfig,
+  };
 
   return (
     <DataContextProvider.Provider value={contextValue}>
