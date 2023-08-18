@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { styled } from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
+import DataContextProvider from "../context/AuthContext";
 
 export default function Header() {
   const [searchList, setSearchList] = useState([]);
@@ -13,11 +14,7 @@ export default function Header() {
 
   let timeout = null;
 
-  const config = {
-    headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjkyMjM3NDE0LCJleHAiOjE2OTQ4Mjk0MTR9.pTk293TceP9KoqZs0--sRtGwGxKwB6KF_miHpfEg6pc`,
-    },
-  };
+  const { config } = useContext(DataContextProvider);
 
   return (
     <Container>
