@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
 import axios from "axios";
@@ -99,7 +100,6 @@ export default function SignupPage() {
         </label>
 
         <StyledLink to="/">Switch back to log in</StyledLink>
-
       </Container>
     </Body>
   );
