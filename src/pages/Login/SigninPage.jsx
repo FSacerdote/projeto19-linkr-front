@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function SigninPage(){
-  const {setToken} = useContext(DataContextProvider)
+  const {setToken, setConfig, setPicture} = useContext(DataContextProvider)
   const [isDisable, setIsDisable] = useState(false);
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
@@ -32,8 +32,11 @@ export default function SigninPage(){
 
     promise.then((res) => {
       localStorage.setItem("token", res.data.token)
+      localStorage.setItem("picture", res.data.pictureUrl)
       setToken(res.data.token)
+      setPicture(res.data.pictureUrl)
       setIsDisable(false);
+      setConfig({headers:{authorization:`Bearer ${res.data.token}`}})
       navigate("/timeline");
     });
     promise.catch((res) => {
