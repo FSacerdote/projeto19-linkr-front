@@ -24,6 +24,7 @@ function App() {
     setConfig,
   };
 
+
   return (
     <DataContextProvider.Provider value={contextValue}>
       <BrowserRouter>

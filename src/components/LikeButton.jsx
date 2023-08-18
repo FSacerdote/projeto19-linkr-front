@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useContext } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { Tooltip } from "react-tooltip";
 import { styled } from "styled-components";
+import DataContextProvider from "../context/AuthContext";
 
 export default function LikeButton({ postId }) {
   const [likes, setLikes] = useState(0);
@@ -12,18 +13,11 @@ export default function LikeButton({ postId }) {
   const [tooltip, setTooltip] = useState("");
   const [loggedUser, setLoggedUser] = useState("nathan");
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc";
-
   const apiUrl = process.env.REACT_APP_API_URL;
 
-  const fetchLikesAndUsers = useCallback(() => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
+  const { config } = useContext(DataContextProvider);
 
+  const fetchLikesAndUsers = useCallback(() => {
     axios
       .get(`${apiUrl}/post/${postId}/likes`, config)
       .then((resp) => {
@@ -43,12 +37,6 @@ export default function LikeButton({ postId }) {
   }, [fetchLikesAndUsers]);
 
   const handleLike = () => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
     setHeart((prevHeart) => !prevHeart);
 
     if (heart) {

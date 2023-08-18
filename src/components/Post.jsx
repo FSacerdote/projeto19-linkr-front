@@ -3,11 +3,12 @@ import LikeButton from "./LikeButton";
 import { useNavigate } from "react-router-dom";
 import { PiPencilFill } from "react-icons/pi";
 import { AiFillDelete } from "react-icons/ai";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { Tagify } from "react-tagify";
+import DataContextProvider from "../context/AuthContext";
 
 Modal.setAppElement("#root");
 
@@ -20,14 +21,7 @@ export default function Post({ post, contador, setContador }) {
   const [loading, setLoading] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc";
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  const { config } = useContext(DataContextProvider);
 
   const editFieldRef = useRef();
 
@@ -160,7 +154,7 @@ export default function Post({ post, contador, setContador }) {
         ) : (
           <Tagify
             onClick={(text) => navigate(`/hashtag/${text}`)}
-            tagStyle={{ color: "#ffffff", fontWeight: 700, cursor: "pointer"}}
+            tagStyle={{ color: "#ffffff", fontWeight: 700, cursor: "pointer" }}
           >
             <Text>
               {loading ? (
