@@ -21,7 +21,7 @@ export default function Header() {
 
   return (
     <Container>
-      <Logo>linkr</Logo>
+      <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
       <SearchResult>
         {!loading &&
           focus &&
@@ -60,7 +60,8 @@ export default function Header() {
               try {
                 if (e.target.value.length >= 3) {
                   const res = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/users/${e.target.value}`, config
+                    `${process.env.REACT_APP_API_URL}/users/${e.target.value}`,
+                    config
                   );
                   setSearchList(res.data);
                   setLoading(false);
@@ -203,6 +204,10 @@ const Logo = styled.p`
   font-size: 49px;
   font-weight: 700;
   letter-spacing: 2.45px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const User = styled.div`
