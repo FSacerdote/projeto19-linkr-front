@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
 import axios from "axios";
 import { useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -22,6 +23,14 @@ export default function SignupPage() {
 
   function userRegister(e) {
     e.preventDefault();
+    if (
+      formData.email === "" ||
+      formData.username === "" ||
+      formData.password === "" ||
+      formData.pictureUrl === ""
+    ) {
+      return alert("Preencha os campos corretamente");
+    }
     setIsDisable(true);
 
     const promise = axios.post(
@@ -30,7 +39,6 @@ export default function SignupPage() {
     );
 
     promise.then(() => {
-      alert("Cadastrado com sucesso!");
       setIsDisable(false);
       navigate("/");
     });
@@ -41,6 +49,7 @@ export default function SignupPage() {
         );
       } else {
         alert(error.message);
+        console.log(error);
       }
       setIsDisable(false);
     });
@@ -51,55 +60,52 @@ export default function SignupPage() {
       <Sidebar>
         <div>
           <h1>linkr</h1>
-          <span>save, share and sicover the best links on the web</span>
+          <span>save, share and discover the best links on the web</span>
         </div>
       </Sidebar>
       <Container>
-        <label>
-          <form onSubmit={userRegister}>
-            <input
-              type="email"
-              placeholder="e-mail"
-              value={formData.email}
-              onChange={handleChange}
-              name="email"
-              required
-              disabled={isDisable}
-            />
-            <input
-              type="password"
-              placeholder="password"
-              value={formData.password}
-              onChange={handleChange}
-              name="password"
-              required
-              disabled={isDisable}
-            />
-            <input
-              type="text"
-              placeholder="username"
-              value={formData.username}
-              onChange={handleChange}
-              name="username"
-              required
-              disabled={isDisable}
-            />
-            <input
-              type="url"
-              placeholder="picture url"
-              value={formData.pictureUrl}
-              onChange={handleChange}
-              name="pictureUrl"
-              required
-              disabled={isDisable}
-            />
-            <button type="submit" disabled={isDisable}>
-              Sign Up
-            </button>
-          </form>
-        </label>
-
-        <StyledLink to="/">Switch back to log in</StyledLink>
+        <form onSubmit={userRegister}>
+          <input
+            type="email"
+            placeholder="e-mail"
+            value={formData.email}
+            onChange={handleChange}
+            name="email"
+            disabled={isDisable}
+          />
+          <input
+            type="password"
+            placeholder="password"
+            value={formData.password}
+            onChange={handleChange}
+            name="password"
+            disabled={isDisable}
+          />
+          <input
+            type="text"
+            placeholder="username"
+            value={formData.username}
+            onChange={handleChange}
+            name="username"
+            disabled={isDisable}
+          />
+          <input
+            type="url"
+            placeholder="picture url"
+            value={formData.pictureUrl}
+            onChange={handleChange}
+            name="pictureUrl"
+            disabled={isDisable}
+          />
+          <button type="submit" disabled={isDisable}>
+            {isDisable ? (
+              <ThreeDots height="13px" color="#ffffff" />
+            ) : (
+              "Sign Up"
+            )}
+          </button>
+          <StyledLink to="/">Switch back to log in</StyledLink>
+        </form>
       </Container>
     </Body>
   );
