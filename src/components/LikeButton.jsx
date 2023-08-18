@@ -5,14 +5,13 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { Tooltip } from "react-tooltip";
 import { styled } from "styled-components";
 
-export default function LikeButton() {
+export default function LikeButton({ postId }) {
   const [likes, setLikes] = useState(0);
   const [users, setUsers] = useState([]);
   const [heart, setHeart] = useState(false);
   const [tooltip, setTooltip] = useState("");
   const [loggedUser, setLoggedUser] = useState("nathan");
 
-  const postId = 1;
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjkyMTkzOTQ5LCJleHAiOjE2OTQ3ODU5NDl9.VhckFht3sYXQTaqy2LHE3Vga6rZFygqH9tw8AKTR8Xc";
 
@@ -35,9 +34,9 @@ export default function LikeButton() {
         );
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       });
-  }, [apiUrl, loggedUser]);
+  }, [apiUrl, loggedUser, postId]);
 
   useEffect(() => {
     fetchLikesAndUsers();
@@ -117,6 +116,7 @@ export default function LikeButton() {
           backgroundColor: "rgb(255, 255, 255)",
           color: "#222",
           borderRadius: "3px",
+          zIndex: "1",
         }}
       />
     </>
