@@ -3,6 +3,7 @@ import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
 import DataContextProvider from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function SigninPage(){
   const {setToken, setConfig, setPicture} = useContext(DataContextProvider)
@@ -83,7 +84,7 @@ export default function SigninPage(){
               disabled={isDisable}
             />
        
-      <button type="submit" disabled={isDisable}>Log In</button>
+      <button type="submit" disabled={isDisable}>{isDisable ? <ThreeDots height="13px" color="#ffffff" /> : "Log In"}</button>
       <StyledLink to="/signup">First time? Create an account!</StyledLink>
       </form>
     </Container>

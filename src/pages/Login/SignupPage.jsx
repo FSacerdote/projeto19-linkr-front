@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
 import axios from "axios";
 import { useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -33,7 +34,6 @@ export default function SignupPage() {
     );
 
     promise.then(() => {
-      alert("Cadastrado com sucesso!");
       setIsDisable(false);
       navigate("/");
     });
@@ -93,7 +93,7 @@ export default function SignupPage() {
               disabled={isDisable}
             />
             <button type="submit" disabled={isDisable}>
-              Sign Up
+              {isDisable ? <ThreeDots height="13px" color="#ffffff" /> : "Sign Up"}
             </button>
             <StyledLink to="/">Switch back to log in</StyledLink>
           </form>
