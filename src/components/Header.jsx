@@ -3,9 +3,7 @@ import { styled } from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
-
 import { FaChevronDown } from "react-icons/fa";
-
 import DataContextProvider from "../context/AuthContext";
 
 
@@ -13,13 +11,16 @@ export default function Header() {
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [focus, setFocus] = useState(false);
-  
-
+  const {picture, setToken, config} = useContext(DataContextProvider) 
   const navigate = useNavigate();
-
   let timeout = null;
 
-  const { config } = useContext(DataContextProvider);
+  function logout(){
+    localStorage.removeItem("token")
+    setToken(null)
+    navigate("/")
+  }
+
 
   return (
     <Container>
@@ -80,11 +81,11 @@ export default function Header() {
       </SearchContainer>
 
       <User>
-        <Logout>
+        <Logout onClick={logout}>
           <h1>
             <RotatingDiv className="icon"/>
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+                src={picture}
                 alt=""
               />
             
