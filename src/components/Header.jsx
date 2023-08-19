@@ -3,11 +3,13 @@ import { styled } from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
+import { FaChevronDown } from "react-icons/fa";
 
 export default function Header() {
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [focus, setFocus] = useState(false);
+  
 
   const navigate = useNavigate();
 
@@ -60,7 +62,8 @@ export default function Header() {
               try {
                 if (e.target.value.length >= 3) {
                   const res = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/users/${e.target.value}`, config
+                    `${process.env.REACT_APP_API_URL}/users/${e.target.value}`,
+                    config
                   );
                   setSearchList(res.data);
                   setLoading(false);
@@ -77,10 +80,17 @@ export default function Header() {
       </SearchContainer>
 
       <User>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-          alt=""
-        />
+        <Logout>
+          <h1>
+            <RotatingDiv className="icon"/>
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+                alt=""
+              />
+            
+          </h1>
+          <h2>logout</h2>
+        </Logout>
       </User>
     </Container>
   );
@@ -211,4 +221,38 @@ const User = styled.div`
     width: 53px;
     border-radius: 53px;
   }
+`;
+
+const Logout =styled.div `
+  width: 200px;
+  height: 60px;
+  background-color: #151515;
+  overflow-y: hidden;
+  transition: height 0.3s ease;
+  color: #ffffff;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  gap: 10px;
+
+  &:hover {
+    height: 125px;
+  }
+  &:hover h1 .icon {
+    transform: rotate(-180deg);
+  }
+`;
+
+const RotatingDiv = styled(FaChevronDown)`
+  height: 25px;
+  transform: rotate(0);
+  display: inline-flex;
+  width: 25px;
+  transition: transform 0.3s ease;
+
+  
 `;
