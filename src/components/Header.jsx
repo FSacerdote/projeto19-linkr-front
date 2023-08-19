@@ -3,40 +3,36 @@ import { styled } from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
+import { FaChevronDown } from "react-icons/fa";
 import DataContextProvider from "../context/AuthContext";
+
 
 export default function Header() {
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [focus, setFocus] = useState(false);
-
+  const {picture, setToken, config} = useContext(DataContextProvider) 
   const navigate = useNavigate();
-
   let timeout = null;
-
-  const { config, picture } = useContext(DataContextProvider);
+  
+  function logout(){
+    localStorage.removeItem("token")
+    setToken(null)
+    navigate("/")
+  }
 
   return (
-    <Container>
-      <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
-      <SearchResult>
-        {!loading &&
-          focus &&
-          searchList.map((userFound) => {
-            return (
-              <ProfileLi
-                data-test="user-search"
-                key={userFound.id}
-                onClick={() => {
-                  navigate(`/user/${userFound.id}`);
-                }}
-              >
-                <img src={userFound.pictureUrl} alt={userFound.username} />
-                <h3>{userFound.username}</h3>
-              </ProfileLi>
-            );
-          })}
-      </SearchResult>
+    <>
+      <Container>
+        <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
+
+        <User>
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+            alt=""
+          />
+        </User>
+      </Container>
       <SearchContainer>
         <SearchBar
           data-test="search"
@@ -72,32 +68,73 @@ export default function Header() {
           }}
         />
         <SearchIcon />
+        <SearchResult>
+          {!loading &&
+            focus &&
+            searchList.map((userFound) => {
+              return (
+                <ProfileLi
+                  data-test="user-search"
+                  key={userFound.id}
+                  onClick={() => {
+                    navigate(`/user/${userFound.id}`);
+                  }}
+                >
+                  <img src={userFound.pictureUrl} alt={userFound.username} />
+                  <h3>{userFound.username}</h3>
+                </ProfileLi>
+              );
+            })}
+        </SearchResult>
       </SearchContainer>
-
       <User>
-        <img
-          src={picture}
-          alt=""
-        />
+        <Logout onClick={logout}>
+          <h1>
+            <RotatingDiv className="icon"/>
+              <img
+                src={picture}
+                alt=""
+              />
+            
+          </h1>
+          <h2>logout</h2>
+        </Logout>
       </User>
-    </Container>
+    </>
   );
 }
 
 const SearchIcon = styled(AiOutlineSearch)`
   font-size: 34px;
   position: absolute;
-  top: 15%;
+  top: 6px;
   right: 10px;
   color: #c6c6c6;
+
+  z-index: 5;
+  @media (max-width: 1000px) {
+    top: 96px;
+    font-size: 38px;
+    right: 5%;
+  }
 `;
 
 const SearchContainer = styled.div`
-  width: 30%;
-  position: fixed;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
+  @media (min-width: 1000px) {
+    width: 30%;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    position: fixed;
+  }
+
+  z-index: 4;
+
+  @media (max-width: 1000px) {
+    position: static;
+    top: 0;
+    left: 0;
+  }
 `;
 
 const SearchBar = styled.input`
@@ -107,9 +144,15 @@ const SearchBar = styled.input`
 
   padding: 10px;
 
+  position: absolute;
+  top: 0;
+  left: 0;
+
   background-color: #ffffff;
   border: none;
   outline: none;
+
+  z-index: 5;
 
   font-family: "lato", sans-serif;
   font-size: 19px;
@@ -120,24 +163,42 @@ const SearchBar = styled.input`
   &::placeholder {
     color: #c6c6c6;
   }
+  @media (max-width: 1000px) {
+    width: 95%;
+    height: 60px;
+    font-size: 24px;
+    padding: 20px;
+    top: 85px;
+    left: 2.5%;
+  }
 `;
 
 const SearchResult = styled.ul`
-  width: 30%;
+  width: 100%;
   height: fit-content;
   max-height: 300px;
 
   padding-top: 45px;
 
-  position: fixed;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  z-index: 4;
 
   border-radius: 8px;
   background-color: #e7e7e7;
 
   transition: max-height 0.2s ease-out;
+
+  z-index: 4;
+
+  @media (max-width: 1000px) {
+    width: 95%;
+    padding-top: 60px;
+    top: 85px;
+    left: 2.5%;
+  }
 `;
 
 const ProfileLi = styled.li`
@@ -189,10 +250,14 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   min-height: 72px;
-  width: 100%;
+  width: 100vw;
   background-color: #151515;
   padding-left: 28px;
   padding-right: 17px;
+
+  @media(max-width: 1000px){
+    z-index: 10;
+  }
 `;
 
 const Logo = styled.p`
@@ -212,5 +277,45 @@ const User = styled.div`
     height: 53px;
     width: 53px;
     border-radius: 53px;
+
   }
+`;
+
+const Logout =styled.div `
+  width: 200px;
+  height: 60px;
+  background-color: #151515;
+  overflow-y: hidden;
+  transition: height 0.3s ease;
+  color: #ffffff;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 22px;
+  gap: 10px;
+
+  &:hover {
+    height: 125px;
+  }
+  
+  &:hover h1 .icon {
+    transform: rotate(-180deg);
+    
+  }
+  h2{
+    padding-top: 15px;
+    font-size: 23px;
+    font-weight: 800;
+  }
+`;
+
+const RotatingDiv = styled(FaChevronDown)`
+  height: 25px;
+  transform: rotate(0);
+  display: inline-flex;
+  width: 25px;
+  transition: transform 0.3s ease;
 `;
