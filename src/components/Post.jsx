@@ -221,6 +221,11 @@ const Container = styled.div`
   padding-right: 21px;
   flex-shrink: 0;
   padding-bottom: 20px;
+  @media (max-width: 1000px) {
+    border-radius: 0;
+    width: 100%;
+    justify-content: center;
+  }
 `;
 const Info = styled.div`
   display: flex;
@@ -228,6 +233,9 @@ const Info = styled.div`
   padding-top: 16px;
   padding-left: 18px;
   gap: 19px;
+  @media (max-width: 1000px) {
+    padding-left: 15px;
+  }
 `;
 const Top = styled.div`
   display: flex;
@@ -249,6 +257,12 @@ const User = styled.div`
   img:hover {
     cursor: pointer;
   }
+  @media (max-width: 1000px) {
+    img{
+      width: 40px;
+      height: 40px;
+    }
+  }
 `;
 
 const Content = styled.div`
@@ -257,17 +271,26 @@ const Content = styled.div`
     font-family: "Lato", sans-serif;
     font-weight: 400;
   }
+  @media (max-width: 1000px) {
+    width: 100%;
+  }
 `;
 
 const UserName = styled.p`
   color: #fff;
   font-size: 19px;
+  @media (max-width: 1000px) {
+    font-size: 17px;
+  }
 `;
 
 const Text = styled.p`
   margin-top: 7px;
   color: #b7b7b7;
   font-size: 17px;
+  @media (max-width: 1000px) {
+    font-size: 15px;
+  }
 `;
 
 const PostUrl = styled.div`
@@ -290,6 +313,14 @@ const PostUrl = styled.div`
     width: 155px;
     top: 0;
   }
+  @media (max-width: 1000px) {
+    height: 115px;
+    min-width: 0;
+    width: 100%;
+    img{
+      width: 85px;
+    }
+  }
 `;
 
 const TextContainer = styled.div`
@@ -306,24 +337,54 @@ const TextContainer = styled.div`
 const Title = styled.p`
   height: 38px;
   margin-top: 24px;
-  width: 250px;
+  width: 260px;
   color: #cecece;
   font-size: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (max-width: 1000px) {
+    height: 26px;
+    margin-top: 7px;
+    width: 165px;
+    font-size: 11px;
+  }
 `;
 
 const Url = styled.p`
   margin-top: 13px;
-  width: 300px;
+  width: 260px;
   color: #cecece;
   font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  @media (max-width: 1000px) {
+    margin-top: 8px;
+    width: 165px;
+    font-size: 9px;
+  }
 `;
 
 const Description = styled.p`
   height: 39px;
   margin-top: 5px;
-  width: 260px;
+  width: 300px;
   color: #9b9595;
   font-size: 11px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (max-width: 1000px) {
+    margin-top: 4px;
+    height: 44px;
+    width: 165px;
+    font-size: 9px;
+  }
 `;
 
 const EditIcon = styled(PiPencilFill)`

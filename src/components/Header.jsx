@@ -14,13 +14,12 @@ export default function Header() {
   const {picture, setToken, config} = useContext(DataContextProvider) 
   const navigate = useNavigate();
   let timeout = null;
-
+  
   function logout(){
     localStorage.removeItem("token")
     setToken(null)
     navigate("/")
   }
-
 
   return (
     <>
