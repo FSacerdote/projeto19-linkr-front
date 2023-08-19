@@ -76,7 +76,7 @@ const Board = styled.div`
     padding-bottom: 20px;
     position: static;
     margin-left: 0;
-    margin-top: 90px;
+    margin-top: 180px;
 
     ul {
       flex-direction: row;
