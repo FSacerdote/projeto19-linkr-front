@@ -78,7 +78,7 @@ const Page = styled.div`
   @media (max-width: 1000px) {
     flex-direction: column-reverse;
     align-items: center;
-    padding: 0 20px;
+    padding: 0;
   }
 `;
 
@@ -104,6 +104,11 @@ const Timeline = styled.div`
     text-align: center;
   }
   @media (max-width: 1000px) {
+    width: 100%;
     margin-top: 20px;
+    h1{
+      margin-left: 17px;
+      font-size: 33px;
+    }
   }
 `;
