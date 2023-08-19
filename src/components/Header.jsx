@@ -101,7 +101,7 @@ export default function Header() {
           <h2>logout</h2>
         </Logout>
       </User>
-    </Container>
+    </>
   );
 }
 
