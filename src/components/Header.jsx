@@ -225,6 +225,7 @@ const User = styled.div`
     height: 53px;
     width: 53px;
     border-radius: 53px;
+
   }
 `;
 
@@ -241,14 +242,21 @@ const Logout =styled.div `
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 20px;
+  border-radius: 22px;
   gap: 10px;
 
   &:hover {
     height: 125px;
   }
+  
   &:hover h1 .icon {
     transform: rotate(-180deg);
+    
+  }
+  h2{
+    padding-top: 15px;
+    font-size: 23px;
+    font-weight: 800;
   }
 `;
 
@@ -258,6 +266,4 @@ const RotatingDiv = styled(FaChevronDown)`
   display: inline-flex;
   width: 25px;
   transition: transform 0.3s ease;
-
-  
 `;
