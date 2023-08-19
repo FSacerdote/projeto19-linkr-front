@@ -3,18 +3,24 @@ import { styled } from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
+import { FaChevronDown } from "react-icons/fa";
 import DataContextProvider from "../context/AuthContext";
+
 
 export default function Header() {
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [focus, setFocus] = useState(false);
-
+  const {picture, setToken, config} = useContext(DataContextProvider) 
   const navigate = useNavigate();
-
   let timeout = null;
 
-  const { config } = useContext(DataContextProvider);
+  function logout(){
+    localStorage.removeItem("token")
+    setToken(null)
+    navigate("/")
+  }
+
 
   return (
     <>
@@ -82,6 +88,19 @@ export default function Header() {
             })}
         </SearchResult>
       </SearchContainer>
+      <User>
+        <Logout onClick={logout}>
+          <h1>
+            <RotatingDiv className="icon"/>
+              <img
+                src={picture}
+                alt=""
+              />
+            
+          </h1>
+          <h2>logout</h2>
+        </Logout>
+      </User>
     </>
   );
 }
@@ -259,5 +278,45 @@ const User = styled.div`
     height: 53px;
     width: 53px;
     border-radius: 53px;
+
   }
+`;
+
+const Logout =styled.div `
+  width: 200px;
+  height: 60px;
+  background-color: #151515;
+  overflow-y: hidden;
+  transition: height 0.3s ease;
+  color: #ffffff;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 22px;
+  gap: 10px;
+
+  &:hover {
+    height: 125px;
+  }
+  
+  &:hover h1 .icon {
+    transform: rotate(-180deg);
+    
+  }
+  h2{
+    padding-top: 15px;
+    font-size: 23px;
+    font-weight: 800;
+  }
+`;
+
+const RotatingDiv = styled(FaChevronDown)`
+  height: 25px;
+  transform: rotate(0);
+  display: inline-flex;
+  width: 25px;
+  transition: transform 0.3s ease;
 `;
