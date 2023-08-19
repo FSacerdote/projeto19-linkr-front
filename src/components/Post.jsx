@@ -306,24 +306,37 @@ const TextContainer = styled.div`
 const Title = styled.p`
   height: 38px;
   margin-top: 24px;
-  width: 250px;
+  width: 260px;
   color: #cecece;
   font-size: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Url = styled.p`
   margin-top: 13px;
-  width: 300px;
+  width: 260px;
   color: #cecece;
   font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
 const Description = styled.p`
   height: 39px;
   margin-top: 5px;
-  width: 260px;
+  width: 300px;
   color: #9b9595;
   font-size: 11px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const EditIcon = styled(PiPencilFill)`

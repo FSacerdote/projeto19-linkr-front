@@ -14,7 +14,7 @@ export default function Header() {
 
   let timeout = null;
 
-  const { config } = useContext(DataContextProvider);
+  const { config, picture } = useContext(DataContextProvider);
 
   return (
     <Container>
@@ -76,7 +76,7 @@ export default function Header() {
 
       <User>
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          src={picture}
           alt=""
         />
       </User>

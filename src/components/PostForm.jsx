@@ -8,7 +8,7 @@ export default function PostForm({ contador, setContador }) {
   const [description, setDescription] = useState("");
   const [habilitado, setHabilitado] = useState(false);
 
-  const { config } = useContext(DataContextProvider);
+  const { config, picture } = useContext(DataContextProvider);
 
   function newPost(event) {
     event.preventDefault();
@@ -35,7 +35,7 @@ export default function PostForm({ contador, setContador }) {
     <Container>
       <User>
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          src={picture}
           alt=""
         />
       </User>
