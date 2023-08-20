@@ -13,7 +13,7 @@ import DataContextProvider from "../context/AuthContext";
 Modal.setAppElement("#root");
 
 export default function Post({ post, contador, setContador }) {
-  const { id, userId, username, pictureUrl, description, data, url } = post;
+  const { id, userId, username, pictureUrl, description, data, url, likeCount, likedUsers } = post;
   const [editedText, setEditedText] = useState(description);
   const [editModeText, setEditModeText] = useState(editedText);
   const navigate = useNavigate();
@@ -121,7 +121,7 @@ export default function Post({ post, contador, setContador }) {
             alt=""
           />
         </User>
-        <LikeButton postId={id} />
+        <LikeButton postId={id} likeCount={likeCount} likedUsers={likedUsers} />
       </Info>
       <Content>
         <Top>

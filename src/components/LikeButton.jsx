@@ -6,57 +6,64 @@ import { Tooltip } from "react-tooltip";
 import { styled } from "styled-components";
 import DataContextProvider from "../context/AuthContext";
 
-export default function LikeButton({ postId }) {
-  const [likes, setLikes] = useState(0);
-  const [users, setUsers] = useState([]);
+export default function LikeButton({ postId, likeCount, likedUsers }) {
+  const [likes, setLikes] = useState(parseInt(likeCount));
+  const [users, setUsers] = useState(likedUsers);
   const [heart, setHeart] = useState(false);
   const [tooltip, setTooltip] = useState("");
   const [loggedUser, setLoggedUser] = useState("nathan");
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
-  const { config } = useContext(DataContextProvider);
+  const { config, userId } = useContext(DataContextProvider);
 
   const fetchLikesAndUsers = useCallback(() => {
+    setIsDisabled(true);
     axios
       .get(`${apiUrl}/post/${postId}/likes`, config)
       .then((resp) => {
-        setLikes(resp.data.likeCount);
-        setUsers(resp.data.likedUsers.map((user) => user.username));
+        setIsDisabled(false);
+        setLikes(parseInt(resp.data.likeCount));
+        const filteredUsers = resp.data.likedUsers.filter(user => user.userId !== userId);
+        const usernames = filteredUsers.map(user => user.username);
+        setUsers(usernames);
         setHeart(
-          resp.data.likedUsers.some((user) => user.username === loggedUser)
+          resp.data.likedUsers.some((user) => user.userId === userId)
         );
       })
       .catch((err) => {
+        setIsDisabled(false);
         console.log(err.response);
       });
   }, [apiUrl, loggedUser, postId]);
-
-  useEffect(() => {
-    fetchLikesAndUsers();
-  }, [fetchLikesAndUsers]);
-
+  
   const handleLike = () => {
     setHeart((prevHeart) => !prevHeart);
+    setIsDisabled(true);
 
     if (heart) {
       axios
         .delete(`${apiUrl}/like/${postId}`, config)
         .then((resp) => {
           console.log(resp.data);
+          setIsDisabled(false);
           fetchLikesAndUsers(); // Fetch atualizado após ação de like/deslike
         })
         .catch((err) => {
           console.log(err.response);
+          setIsDisabled(false);
         });
     } else {
       axios
         .post(`${apiUrl}/like/${postId}`, null, config)
         .then((resp) => {
           console.log(resp.data);
+          setIsDisabled(false);
           fetchLikesAndUsers(); // Fetch atualizado após ação de like/deslike
         })
         .catch((err) => {
+          setIsDisabled(false);
           console.log(err.response);
         });
     }
@@ -71,7 +78,8 @@ export default function LikeButton({ postId }) {
       return heart
         ? `Você e ${users[0]} curtiram`
         : `${users[0]} e ${users[1]} curtiram`;
-    } else if (likes > 2) {
+    }  
+    else if (likes > 2) {
       const remaining = likes - 2;
       return heart
         ? `Você, ${users[0]} e outras ${remaining} pessoa${
@@ -83,7 +91,15 @@ export default function LikeButton({ postId }) {
     } else {
       return heart ? "Você curtiu" : "Ninguém curtiu ainda";
     }
-  }, [heart, likes, users]);
+  }, [likes, users]);
+
+  useEffect(() => {
+    const userLiked = likedUsers.some(user => user.userId === userId);
+    setHeart(userLiked);
+    const filteredUsers = likedUsers.filter(user => user.userId !== userId);
+    const usernames = filteredUsers.map(user => user.username);
+    setUsers(usernames);
+  }, [])
 
   return (
     <>
@@ -92,6 +108,7 @@ export default function LikeButton({ postId }) {
         data-tooltip-place="bottom"
         data-tooltip-content={tooltipContent}
         onClick={handleLike}
+        disabled={isDisabled}
       >
         <button>{heartIcon}</button>
         <LikeCount>
