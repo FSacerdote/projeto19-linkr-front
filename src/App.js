@@ -34,7 +34,7 @@ function App() {
         <GlobalStyle />
         <Routes>
           <Route path="/timeline" element={<TimelinePage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/sign-up" element={<SignupPage />} />
           <Route path="/" element={<SigninPage />} />
           <Route path="/user/:id?" element={<UserPage />} />
           <Route path="/hashtag/:hashtag" element={<HashtagPage />} />
