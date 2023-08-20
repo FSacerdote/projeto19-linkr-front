@@ -110,7 +110,7 @@ export default function Post({ post, contador, setContador }) {
   }
 
   return (
-    <Container>
+    <Container data-test="post">
       <Info>
         <User>
           <img
@@ -125,7 +125,7 @@ export default function Post({ post, contador, setContador }) {
       </Info>
       <Content>
         <Top>
-          <UserName>{username}</UserName>
+          <UserName data-test="username">{username}</UserName>
           <Buttons>
             <EditIcon onClick={handleEdit} />
             <DeleteIcon onClick={openDeleteModal} />
@@ -156,7 +156,7 @@ export default function Post({ post, contador, setContador }) {
             onClick={(text) => navigate(`/hashtag/${text}`)}
             tagStyle={{ color: "#ffffff", fontWeight: 700, cursor: "pointer" }}
           >
-            <Text>
+            <Text data-test="description">
               {loading ? (
                 <ThreeDots
                   height="19"
@@ -176,6 +176,7 @@ export default function Post({ post, contador, setContador }) {
         )}
 
         <PostUrl
+          data-test="link"
           onClick={() => {
             window.location.href = url;
           }}

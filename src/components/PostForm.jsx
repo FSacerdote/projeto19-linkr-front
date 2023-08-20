@@ -32,7 +32,7 @@ export default function PostForm({ contador, setContador }) {
   }
 
   return (
-    <Container>
+    <Container data-test="publish-box">
       <User>
         <img
           src={picture}
@@ -41,7 +41,8 @@ export default function PostForm({ contador, setContador }) {
       </User>
       <Form onSubmit={newPost}>
         <p>What are you going to share today?</p>
-        <Url
+        <Url 
+          data-test="link"
           placeholder="http://..."
           type="url"
           value={url}
@@ -50,13 +51,14 @@ export default function PostForm({ contador, setContador }) {
           required
         />
         <Description
+          data-test="description"
           placeholder="Awesome article about #javascript"
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           disabled={habilitado}
         />
-        <button type="submit" disabled={habilitado}>
+        <button data-test="publish-btn" type="submit" disabled={habilitado}>
           {!habilitado ? "Publish" : "Publishing..."}
         </button>
       </Form>

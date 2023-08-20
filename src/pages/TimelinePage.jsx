@@ -37,7 +37,7 @@ export default function TimelinePage() {
         <Timeline>
           <h1>timeline</h1>
           <PostForm contador={contador} setContador={setContador}></PostForm>
-          <h2>{message}</h2>
+          <h2 data-test="message">{message}</h2>
         </Timeline>
         <TrendingBoard></TrendingBoard>
       </Page>
@@ -51,7 +51,7 @@ export default function TimelinePage() {
         <h1>timeline</h1>
         <PostForm contador={contador} setContador={setContador}></PostForm>
         {posts.length === 0 ? (
-          <h2>There are no posts yet</h2>
+          <h2 data-test="message">There are no posts yet</h2>
         ) : (
           posts.map((post) => (
             <Post
