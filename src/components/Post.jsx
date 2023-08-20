@@ -127,12 +127,13 @@ export default function Post({ post, contador, setContador }) {
         <Top>
           <UserName data-test="username">{username}</UserName>
           <Buttons>
-            <EditIcon onClick={handleEdit} />
-            <DeleteIcon onClick={openDeleteModal} />
+            <EditIcon data-test="edit-btn" onClick={handleEdit} />
+            <DeleteIcon data-test="delete-btn" onClick={openDeleteModal} />
           </Buttons>
         </Top>
         {isEditing && !loading ? (
-          <EditingPost
+          <EditingPost 
+            data-test="edit-input"
             ref={editFieldRef}
             type="text"
             value={editedText}
@@ -203,8 +204,8 @@ export default function Post({ post, contador, setContador }) {
             to delete this post?
           </p>
           <div>
-            <CancelDelete onClick={closeDeleteModal}>No, go back</CancelDelete>
-            <ConfirmDelete onClick={handleDeleteConfirm}>
+            <CancelDelete data-test="cancel" onClick={closeDeleteModal}>No, go back</CancelDelete>
+            <ConfirmDelete data-test="confirm" onClick={handleDeleteConfirm}>
               Yes, delete it
             </ConfirmDelete>
           </div>
