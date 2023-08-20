@@ -101,7 +101,7 @@ export default function SigninPage() {
           <button data-test="login-btn" type="submit" disabled={isDisable}>
             {isDisable ? <ThreeDots height="13px" color="#ffffff" /> : "Log In"}
           </button>
-          <StyledLink data-test="sign-up-link" to="/signup">First time? Create an account!</StyledLink>
+          <StyledLink data-test="sign-up-link" to="/sign-up">First time? Create an account!</StyledLink>
         </form>
       </Container>
     </Body>
