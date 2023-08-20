@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { styled } from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -6,32 +6,73 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { FaChevronDown } from "react-icons/fa";
 import DataContextProvider from "../context/AuthContext";
 
-
 export default function Header() {
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [focus, setFocus] = useState(false);
-  const {picture, setToken, config} = useContext(DataContextProvider) 
+  const [showLogout, setShowLogout] = useState(false);
+  const { picture, config, setToken, setConfig, setPicture } = useContext(DataContextProvider);
   const navigate = useNavigate();
   let timeout = null;
-  
-  function logout(){
-    localStorage.removeItem("token")
-    setToken(null)
-    navigate("/")
+  const logoutBarRef = useRef(null);
+
+  function logout() {
+    localStorage.removeItem("token");
+    navigate("/");
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const picture = localStorage.getItem("picture");
+
+    if (!token || !picture) {
+      navigate("/");
+    }
+
+    setToken(token);
+    setPicture(picture);
+    setConfig({ headers: { authorization: `Bearer ${token}` } });
+
+    const handleClickOutside = (event) => {
+      if (
+        logoutBarRef.current &&
+        !logoutBarRef.current.contains(event.target)
+      ) {
+        setShowLogout(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
       <Container>
         <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
-
-        <User>
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-            alt=""
-          />
-        </User>
+        <div ref={logoutBarRef}>
+          <RotatingDiv
+            onClick={() => setShowLogout(!showLogout)}
+            $showLogout={showLogout}
+          ></RotatingDiv>
+          <User>
+            <img
+              onClick={() => setShowLogout(!showLogout)}
+              src={picture}
+              alt=""
+            />
+          </User>
+          {showLogout && (
+            <LogoutBar
+              onClick={() => {
+                setShowLogout(false);
+              }}
+            >
+              <p onClick={logout}>Logout</p>
+            </LogoutBar>
+          )}
+        </div>
       </Container>
       <SearchContainer>
         <SearchBar
@@ -87,19 +128,6 @@ export default function Header() {
             })}
         </SearchResult>
       </SearchContainer>
-      <User>
-        <Logout onClick={logout}>
-          <h1>
-            <RotatingDiv className="icon"/>
-              <img
-                src={picture}
-                alt=""
-              />
-            
-          </h1>
-          <h2>logout</h2>
-        </Logout>
-      </User>
     </>
   );
 }
@@ -255,8 +283,15 @@ const Container = styled.div`
   padding-left: 28px;
   padding-right: 17px;
 
-  @media(max-width: 1000px){
+  @media (max-width: 1000px) {
     z-index: 10;
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: relative;
   }
 `;
 
@@ -277,45 +312,45 @@ const User = styled.div`
     height: 53px;
     width: 53px;
     border-radius: 53px;
-
+    cursor: pointer;
   }
 `;
 
-const Logout =styled.div `
-  width: 200px;
-  height: 60px;
+const LogoutBar = styled.div`
+  position: absolute;
+  top: 60px;
+  left: -25px;
+  width: 125px;
   background-color: #151515;
-  overflow-y: hidden;
-  transition: height 0.3s ease;
-  color: #ffffff;
-  position: fixed;
-  top: 10px;
-  right: 10px;
+  height: 50px;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  border-radius: 22px;
-  gap: 10px;
+  color: #ffffff;
+  border-bottom-left-radius: 25px;
 
-  &:hover {
-    height: 125px;
-  }
-  
-  &:hover h1 .icon {
-    transform: rotate(-180deg);
-    
-  }
-  h2{
-    padding-top: 15px;
-    font-size: 23px;
-    font-weight: 800;
+  p {
+    font-size: 17px;
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    cursor: pointer;
   }
 `;
 
 const RotatingDiv = styled(FaChevronDown)`
   height: 25px;
-  transform: rotate(0);
-  display: inline-flex;
+  color: #ffffff;
   width: 25px;
   transition: transform 0.3s ease;
+  cursor: pointer;
+
+  transform: rotate(
+    ${(props) => {
+      if (props.$showLogout) {
+        return "180deg";
+      }
+      return "0";
+    }}
+  );
 `;

@@ -70,8 +70,7 @@ const Board = styled.div`
   }
 
   @media (max-width: 1000px) {
-    max-width: 611px;
-    width: 100%;
+    width: 95%;
     height: auto;
     padding-bottom: 20px;
     position: static;

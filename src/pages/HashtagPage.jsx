@@ -20,7 +20,7 @@ export default function TimelinePage() {
     setPosts(undefined);
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/hashtags/${hashtag}`,
+        `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}`,
         configRef.current
       )
       .then((resposta) => {
