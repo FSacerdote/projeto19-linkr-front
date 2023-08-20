@@ -13,7 +13,17 @@ import DataContextProvider from "../context/AuthContext";
 Modal.setAppElement("#root");
 
 export default function Post({ post, contador, setContador }) {
-  const { id, userId, username, pictureUrl, description, data, url, likeCount, likedUsers } = post;
+  const {
+    id,
+    userId,
+    username,
+    pictureUrl,
+    description,
+    data,
+    url,
+    likeCount,
+    likedUsers,
+  } = post;
   const [editedText, setEditedText] = useState(description);
   const [editModeText, setEditModeText] = useState(editedText);
   const navigate = useNavigate();
@@ -128,14 +138,23 @@ export default function Post({ post, contador, setContador }) {
       </Info>
       <Content>
         <Top>
-          <UserName data-test="username">{username}</UserName>
-          {isOwner && <Buttons>
-            <EditIcon data-test="edit-btn" onClick={handleEdit} />
-            <DeleteIcon data-test="delete-btn" onClick={openDeleteModal} />
-          </Buttons>}
+          <UserName
+            data-test="username"
+            onClick={() => {
+              navigate(`/user/${userId}`);
+            }}
+          >
+            {username}
+          </UserName>
+          {isOwner && (
+            <Buttons>
+              <EditIcon data-test="edit-btn" onClick={handleEdit} />
+              <DeleteIcon data-test="delete-btn" onClick={openDeleteModal} />
+            </Buttons>
+          )}
         </Top>
         {isEditing && !loading ? (
-          <EditingPost 
+          <EditingPost
             data-test="edit-input"
             ref={editFieldRef}
             type="text"
@@ -207,7 +226,9 @@ export default function Post({ post, contador, setContador }) {
             to delete this post?
           </p>
           <div>
-            <CancelDelete data-test="cancel" onClick={closeDeleteModal}>No, go back</CancelDelete>
+            <CancelDelete data-test="cancel" onClick={closeDeleteModal}>
+              No, go back
+            </CancelDelete>
             <ConfirmDelete data-test="confirm" onClick={handleDeleteConfirm}>
               Yes, delete it
             </ConfirmDelete>
@@ -263,7 +284,7 @@ const User = styled.div`
     cursor: pointer;
   }
   @media (max-width: 1000px) {
-    img{
+    img {
       width: 40px;
       height: 40px;
     }
@@ -322,7 +343,7 @@ const PostUrl = styled.div`
     height: 115px;
     min-width: 0;
     width: 100%;
-    img{
+    img {
       width: 85px;
     }
   }
