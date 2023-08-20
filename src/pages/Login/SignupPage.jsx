@@ -66,6 +66,7 @@ export default function SignupPage() {
       <Container>
         <form onSubmit={userRegister}>
           <input
+            data-test="email"
             type="email"
             placeholder="e-mail"
             value={formData.email}
@@ -74,6 +75,7 @@ export default function SignupPage() {
             disabled={isDisable}
           />
           <input
+            data-test="password"
             type="password"
             placeholder="password"
             value={formData.password}
@@ -82,6 +84,7 @@ export default function SignupPage() {
             disabled={isDisable}
           />
           <input
+            data-test="username"
             type="text"
             placeholder="username"
             value={formData.username}
@@ -90,6 +93,7 @@ export default function SignupPage() {
             disabled={isDisable}
           />
           <input
+            data-test="picture-url"
             type="url"
             placeholder="picture url"
             value={formData.pictureUrl}
@@ -97,14 +101,14 @@ export default function SignupPage() {
             name="pictureUrl"
             disabled={isDisable}
           />
-          <button type="submit" disabled={isDisable}>
+          <button data-test="sign-up-btn" type="submit" disabled={isDisable}>
             {isDisable ? (
               <ThreeDots height="13px" color="#ffffff" />
             ) : (
               "Sign Up"
             )}
           </button>
-          <StyledLink to="/">Switch back to log in</StyledLink>
+          <StyledLink data-test="login-link" to="/">Switch back to log in</StyledLink>
         </form>
       </Container>
     </Body>

@@ -113,7 +113,7 @@ export default function Post({ post, contador, setContador }) {
   }
 
   return (
-    <Container>
+    <Container data-test="post">
       <Info>
         <User>
           <img
@@ -128,14 +128,15 @@ export default function Post({ post, contador, setContador }) {
       </Info>
       <Content>
         <Top>
-          <UserName>{username}</UserName>
+          <UserName data-test="username">{username}</UserName>
           {isOwner && <Buttons>
-            <EditIcon onClick={handleEdit} />
-            <DeleteIcon onClick={openDeleteModal} />
+            <EditIcon data-test="edit-btn" onClick={handleEdit} />
+            <DeleteIcon data-test="delete-btn" onClick={openDeleteModal} />
           </Buttons>}
         </Top>
         {isEditing && !loading ? (
-          <EditingPost
+          <EditingPost 
+            data-test="edit-input"
             ref={editFieldRef}
             type="text"
             value={editedText}
@@ -159,7 +160,7 @@ export default function Post({ post, contador, setContador }) {
             onClick={(text) => navigate(`/hashtag/${text}`)}
             tagStyle={{ color: "#ffffff", fontWeight: 700, cursor: "pointer" }}
           >
-            <Text>
+            <Text data-test="description">
               {loading ? (
                 <ThreeDots
                   height="19"
@@ -179,6 +180,7 @@ export default function Post({ post, contador, setContador }) {
         )}
 
         <PostUrl
+          data-test="link"
           onClick={() => {
             window.location.href = url;
           }}
@@ -205,8 +207,8 @@ export default function Post({ post, contador, setContador }) {
             to delete this post?
           </p>
           <div>
-            <CancelDelete onClick={closeDeleteModal}>No, go back</CancelDelete>
-            <ConfirmDelete onClick={handleDeleteConfirm}>
+            <CancelDelete data-test="cancel" onClick={closeDeleteModal}>No, go back</CancelDelete>
+            <ConfirmDelete data-test="confirm" onClick={handleDeleteConfirm}>
               Yes, delete it
             </ConfirmDelete>
           </div>

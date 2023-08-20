@@ -60,18 +60,19 @@ export default function Header() {
           ></RotatingDiv>
           <User>
             <img
+              data-test="avatar"
               onClick={() => setShowLogout(!showLogout)}
               src={picture}
               alt=""
             />
           </User>
           {showLogout && (
-            <LogoutBar
+            <LogoutBar data-test="menu"
               onClick={() => {
                 setShowLogout(false);
               }}
             >
-              <p onClick={logout}>Logout</p>
+              <p data-test="logout" onClick={logout}>Logout</p>
             </LogoutBar>
           )}
         </div>

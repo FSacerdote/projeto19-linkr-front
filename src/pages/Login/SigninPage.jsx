@@ -80,6 +80,7 @@ export default function SigninPage() {
       <Container>
         <form onSubmit={loginToAccont}>
           <input
+            data-test="email"
             type="email"
             placeholder="e-mail"
             value={formData.email}
@@ -88,6 +89,7 @@ export default function SigninPage() {
             disabled={isDisable}
           />
           <input
+            data-test="password"
             type="password"
             placeholder="password"
             value={formData.password}
@@ -96,10 +98,10 @@ export default function SigninPage() {
             disabled={isDisable}
           />
 
-          <button type="submit" disabled={isDisable}>
+          <button data-test="login-btn" type="submit" disabled={isDisable}>
             {isDisable ? <ThreeDots height="13px" color="#ffffff" /> : "Log In"}
           </button>
-          <StyledLink to="/signup">First time? Create an account!</StyledLink>
+          <StyledLink data-test="sign-up-link" to="/signup">First time? Create an account!</StyledLink>
         </form>
       </Container>
     </Body>

@@ -103,19 +103,20 @@ export default function LikeButton({ postId, likeCount, likedUsers }) {
 
   return (
     <>
-      <SCLikeButton
+      <SCLikeButton 
         data-tooltip-id="my-tooltip"
         data-tooltip-place="bottom"
         data-tooltip-content={tooltipContent}
         onClick={handleLike}
         disabled={isDisabled}
       >
-        <button>{heartIcon}</button>
-        <LikeCount>
+        <button data-test="like-btn">{heartIcon}</button>
+        <LikeCount data-test="counter">
           {likes} <span>{likes === 1 ? "like" : "likes"}</span>
         </LikeCount>
       </SCLikeButton>
       <Tooltip
+        data-test="tooltip" 
         id="my-tooltip"
         style={{
           backgroundColor: "rgb(255, 255, 255)",
