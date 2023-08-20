@@ -6,7 +6,7 @@ import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 
 export default function SigninPage() {
-  const { setToken, setConfig, setPicture } = useContext(DataContextProvider);
+  const { setToken, setConfig, setPicture, setUserId } = useContext(DataContextProvider);
   const [isDisable, setIsDisable] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -35,6 +35,8 @@ export default function SigninPage() {
     promise.then((res) => {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("picture", res.data.pictureUrl);
+      localStorage.setItem("userId", res.data.userId);
+      setUserId(res.data.userId);
       setToken(res.data.token);
       setPicture(res.data.pictureUrl);
       setIsDisable(false);
@@ -55,10 +57,12 @@ export default function SigninPage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const picture = localStorage.getItem("picture");
+    const userId = parseInt(localStorage.getItem("userId"));
 
-    if (token && picture) {
+    if (token && picture && userId) {
       setToken(token);
       setPicture(picture);
+      setUserId(userId);
       setConfig({ headers: { authorization: `Bearer ${token}` } });
       navigate("/timeline");
     }
