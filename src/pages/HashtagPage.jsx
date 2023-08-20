@@ -39,7 +39,7 @@ export default function TimelinePage() {
       <Page>
         <Header></Header>
         <Timeline>
-          <h1># {hashtag}</h1>
+          <h1 data-test="hashtag-title"># {hashtag}</h1>
           <h2>{message}</h2>
         </Timeline>
         <TrendingBoard></TrendingBoard>
