@@ -11,7 +11,7 @@ export default function Header() {
   const [loading, setLoading] = useState(false);
   const [focus, setFocus] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
-  const { picture, config, setToken, setConfig, setPicture } = useContext(DataContextProvider);
+  const { picture, config, setToken, setConfig, setPicture, setUserId } = useContext(DataContextProvider);
   const navigate = useNavigate();
   let timeout = null;
   const logoutBarRef = useRef(null);
@@ -24,11 +24,13 @@ export default function Header() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const picture = localStorage.getItem("picture");
+    const userId = parseInt(localStorage.getItem("userId"));
 
-    if (!token || !picture) {
+    if (!token || !picture || !userId) {
       navigate("/");
     }
 
+    setUserId(userId);
     setToken(token);
     setPicture(picture);
     setConfig({ headers: { authorization: `Bearer ${token}` } });
