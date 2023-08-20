@@ -21,12 +21,12 @@ export default function TrendingBoard() {
   }, []);
 
   return (
-    <Board>
+    <Board data-test="trending">
       <h2>trending</h2>
       <ul>
         {trending.map((trend, index) => (
           <li key={index}>
-            <Link to={`/hashtag/${trend.name}`}># {trend.name}</Link>
+            <Link to={`/hashtag/${trend.name}`} data-test="hashtag"># {trend.name}</Link>
           </li>
         ))}
       </ul>
