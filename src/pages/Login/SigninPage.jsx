@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
 import DataContextProvider from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -51,6 +51,18 @@ export default function SigninPage() {
       setIsDisable(false);
     });
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const picture = localStorage.getItem("picture");
+
+    if (token && picture) {
+      setToken(token);
+      setPicture(picture);
+      setConfig({ headers: { authorization: `Bearer ${token}` } });
+      navigate("/timeline");
+    }
+  }, []);
 
   return (
     <Body>
