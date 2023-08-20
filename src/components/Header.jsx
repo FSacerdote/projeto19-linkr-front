@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { styled } from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -6,34 +6,61 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { FaChevronDown } from "react-icons/fa";
 import DataContextProvider from "../context/AuthContext";
 
-
 export default function Header() {
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [focus, setFocus] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
-  const {picture, config} = useContext(DataContextProvider) 
+  const { picture, config } = useContext(DataContextProvider);
   const navigate = useNavigate();
   let timeout = null;
-  
-  function logout(){
+  const logoutBarRef = useRef(null);
+
+  function logout() {
     localStorage.removeItem("token");
     navigate("/");
   }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        logoutBarRef.current &&
+        !logoutBarRef.current.contains(event.target)
+      ) {
+        setShowLogout(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
       <Container>
         <Logo onClick={() => navigate("/timeline")}>linkr</Logo>
-        <div>
-          <RotatingDiv onClick={() => setShowLogout(!showLogout)} $showLogout={showLogout}></RotatingDiv>
+        <div ref={logoutBarRef}>
+          <RotatingDiv
+            onClick={() => setShowLogout(!showLogout)}
+            $showLogout={showLogout}
+          ></RotatingDiv>
           <User>
-            <img onClick={() => setShowLogout(!showLogout)}
+            <img
+              onClick={() => setShowLogout(!showLogout)}
               src={picture}
-              alt=""         
+              alt=""
             />
           </User>
-          {showLogout && <LogoutBar onClick={() => {setShowLogout(false)}}><p onClick={logout}>Logout</p></LogoutBar>}
+          {showLogout && (
+            <LogoutBar
+              onClick={() => {
+                setShowLogout(false);
+              }}
+            >
+              <p onClick={logout}>Logout</p>
+            </LogoutBar>
+          )}
         </div>
       </Container>
       <SearchContainer>
@@ -245,11 +272,11 @@ const Container = styled.div`
   padding-left: 28px;
   padding-right: 17px;
 
-  @media(max-width: 1000px){
+  @media (max-width: 1000px) {
     z-index: 10;
   }
 
-  >div {
+  > div {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -278,7 +305,7 @@ const User = styled.div`
   }
 `;
 
-const LogoutBar =styled.div `
+const LogoutBar = styled.div`
   position: absolute;
   top: 60px;
   left: -25px;
@@ -307,10 +334,12 @@ const RotatingDiv = styled(FaChevronDown)`
   transition: transform 0.3s ease;
   cursor: pointer;
 
-  transform: rotate(${(props) => {
-    if (props.$showLogout) {
+  transform: rotate(
+    ${(props) => {
+      if (props.$showLogout) {
         return "180deg";
-    }
-    return "0";
-  }});
+      }
+      return "0";
+    }}
+  );
 `;
