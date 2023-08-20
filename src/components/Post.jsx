@@ -22,6 +22,9 @@ export default function Post({ post, contador, setContador }) {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const { config } = useContext(DataContextProvider);
+  const userSessionId = useContext(DataContextProvider).userId;
+
+  const isOwner = userId === userSessionId;
 
   const editFieldRef = useRef();
 
@@ -126,10 +129,10 @@ export default function Post({ post, contador, setContador }) {
       <Content>
         <Top>
           <UserName>{username}</UserName>
-          <Buttons>
+          {isOwner && <Buttons>
             <EditIcon onClick={handleEdit} />
             <DeleteIcon onClick={openDeleteModal} />
-          </Buttons>
+          </Buttons>}
         </Top>
         {isEditing && !loading ? (
           <EditingPost
