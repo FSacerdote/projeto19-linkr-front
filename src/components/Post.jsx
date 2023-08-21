@@ -180,6 +180,7 @@ export default function Post({ post, contador, setContador }) {
         )}
 
         <PostUrl
+          target="_blank"
           href={url}
           data-test="link"
         >
