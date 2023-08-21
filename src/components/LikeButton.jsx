@@ -116,7 +116,7 @@ export default function LikeButton({ postId, likeCount, likedUsers }) {
         </LikeCount>
       </SCLikeButton>
       <Tooltip
-        data-test="tooltip" 
+        render={({content}) => <p data-test="tooltip">{content}</p>} 
         id="my-tooltip"
         style={{
           backgroundColor: "rgb(255, 255, 255)",

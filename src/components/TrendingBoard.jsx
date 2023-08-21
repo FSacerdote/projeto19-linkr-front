@@ -26,7 +26,7 @@ export default function TrendingBoard() {
       <ul>
         {trending.map((trend, index) => (
           <li key={index}>
-            <Link to={`/hashtag/${trend.name}`} data-test="hashtag"># {trend.name}</Link>
+            <Link to={`/hashtag/${trend.name}`} data-test="hashtag">#{trend.name}</Link>
           </li>
         ))}
       </ul>
