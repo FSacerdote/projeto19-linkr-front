@@ -26,7 +26,7 @@ export default function PostForm({ contador, setContador }) {
         setContador(contador + 1);
       })
       .catch(() => {
-        alert("Houve um erro ao publicar o seu link");
+        alert("There was an error publishing your link");
         setHabilitado(false);
       });
   }
