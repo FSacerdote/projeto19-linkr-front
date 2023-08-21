@@ -41,14 +41,8 @@ export default function Post({ post, contador, setContador }) {
   const apiUrl = process.env.REACT_APP_API_URL;
 
   function handleEdit() {
-    console.log("Editando");
-    if (isEditing) {
-      setEditedText(editModeText);
-      setIsEditing(false);
-    } else {
-      setEditModeText(editedText);
-    }
-    setIsEditing(!isEditing);
+    setEditModeText(editedText);
+    setIsEditing(true);
   }
 
   function handleInputChange(e) {
@@ -60,8 +54,10 @@ export default function Post({ post, contador, setContador }) {
   }
 
   function handleInputBlur() {
-    setIsEditing(false);
-    setEditedText(editModeText);
+    setTimeout(() => {
+      setIsEditing(false);
+      setEditedText(editModeText);
+    }, 100)
   }
 
   async function handleKeyDown(event) {
@@ -436,6 +432,7 @@ const EditingPost = styled.textarea`
   border: none;
   border-radius: 7px;
   resize: none;
+  width: 100%;
   &:focus {
     outline: none;
   }
