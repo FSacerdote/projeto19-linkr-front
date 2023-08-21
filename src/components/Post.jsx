@@ -199,10 +199,9 @@ export default function Post({ post, contador, setContador }) {
         )}
 
         <PostUrl
+          target="_blank"
+          href={url}
           data-test="link"
-          onClick={() => {
-            window.location.href = url;
-          }}
         >
           <TextContainer>
             <Title>{data.title}</Title>
@@ -319,11 +318,12 @@ const Text = styled.p`
   }
 `;
 
-const PostUrl = styled.div`
+const PostUrl = styled.a`
   &:hover {
     cursor: pointer;
     filter: brightness(0.8);
   }
+  display: block;
   margin-top: 20px;
   border-radius: 11px;
   border: 1px solid #4d4d4d;
@@ -331,11 +331,12 @@ const PostUrl = styled.div`
   height: 155px;
   position: relative;
   min-width: 503px;
+  text-decoration: none;
   img {
     border-radius: 0 11px 11px 0;
     right: 0;
     position: absolute;
-    height: 100%;
+    height: 155px;
     width: 155px;
     top: 0;
   }
