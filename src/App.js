@@ -12,6 +12,7 @@ import SignupPage from "./pages/Login/SignupPage";
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [picture, setPicture] = useState(localStorage.getItem("picture"));
+  const [userId, setUserId] = useState(parseInt(localStorage.getItem("userId")));
   const [config, setConfig] = useState({
     headers: { authorization: `Bearer ${token}` },
   });
@@ -22,6 +23,8 @@ function App() {
     setPicture,
     config,
     setConfig,
+    userId,
+    setUserId,
   };
 
   return (
@@ -31,7 +34,7 @@ function App() {
         <GlobalStyle />
         <Routes>
           <Route path="/timeline" element={<TimelinePage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/sign-up" element={<SignupPage />} />
           <Route path="/" element={<SigninPage />} />
           <Route path="/user/:id?" element={<UserPage />} />
           <Route path="/hashtag/:hashtag" element={<HashtagPage />} />

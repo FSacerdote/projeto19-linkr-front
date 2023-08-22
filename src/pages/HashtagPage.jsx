@@ -20,7 +20,7 @@ export default function TimelinePage() {
     setPosts(undefined);
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/hashtags/${hashtag}`,
+        `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}`,
         configRef.current
       )
       .then((resposta) => {
@@ -39,7 +39,7 @@ export default function TimelinePage() {
       <Page>
         <Header></Header>
         <Timeline>
-          <h1># {hashtag}</h1>
+          <h1 data-test="hashtag-title"># {hashtag}</h1>
           <h2>{message}</h2>
         </Timeline>
         <TrendingBoard></TrendingBoard>
@@ -51,7 +51,7 @@ export default function TimelinePage() {
     <Page>
       <Header></Header>
       <Timeline>
-        <h1># {hashtag}</h1>
+        <h1 data-test="hashtag-title"># {hashtag}</h1>
         {posts.length === 0 ? (
           <h2>There are no posts yet</h2>
         ) : (

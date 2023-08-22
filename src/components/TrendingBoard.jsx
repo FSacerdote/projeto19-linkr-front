@@ -21,12 +21,12 @@ export default function TrendingBoard() {
   }, []);
 
   return (
-    <Board>
+    <Board data-test="trending">
       <h2>trending</h2>
       <ul>
         {trending.map((trend, index) => (
           <li key={index}>
-            <Link to={`/hashtag/${trend.name}`}># {trend.name}</Link>
+            <Link to={`/hashtag/${trend.name}`} data-test="hashtag">#{trend.name}</Link>
           </li>
         ))}
       </ul>
@@ -70,13 +70,12 @@ const Board = styled.div`
   }
 
   @media (max-width: 1000px) {
-    max-width: 611px;
-    width: 100%;
+    width: 95%;
     height: auto;
     padding-bottom: 20px;
     position: static;
     margin-left: 0;
-    margin-top: 90px;
+    margin-top: 180px;
 
     ul {
       flex-direction: row;

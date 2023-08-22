@@ -24,6 +24,7 @@ export default function TimelinePage() {
         setPosts(resposta.data);
       })
       .catch(() => {
+        alert("An error occured while trying to fetch the posts, please refresh the page")
         setMessage(
           "An error occured while trying to fetch the posts, please refresh the page"
         );
@@ -37,7 +38,7 @@ export default function TimelinePage() {
         <Timeline>
           <h1>timeline</h1>
           <PostForm contador={contador} setContador={setContador}></PostForm>
-          <h2>{message}</h2>
+          <h2 data-test="message">{message}</h2>
         </Timeline>
         <TrendingBoard></TrendingBoard>
       </Page>
@@ -51,7 +52,7 @@ export default function TimelinePage() {
         <h1>timeline</h1>
         <PostForm contador={contador} setContador={setContador}></PostForm>
         {posts.length === 0 ? (
-          <h2>There are no posts yet</h2>
+          <h2 data-test="message">There are no posts yet</h2>
         ) : (
           posts.map((post) => (
             <Post
@@ -78,7 +79,7 @@ const Page = styled.div`
   @media (max-width: 1000px) {
     flex-direction: column-reverse;
     align-items: center;
-    padding: 0 20px;
+    padding: 0;
   }
 `;
 
@@ -104,6 +105,11 @@ const Timeline = styled.div`
     text-align: center;
   }
   @media (max-width: 1000px) {
+    width: 100%;
     margin-top: 20px;
+    h1{
+      margin-left: 17px;
+      font-size: 33px;
+    }
   }
 `;

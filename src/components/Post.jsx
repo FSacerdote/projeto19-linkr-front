@@ -13,7 +13,17 @@ import DataContextProvider from "../context/AuthContext";
 Modal.setAppElement("#root");
 
 export default function Post({ post, contador, setContador }) {
-  const { id, userId, username, pictureUrl, description, data, url } = post;
+  const {
+    id,
+    userId,
+    username,
+    pictureUrl,
+    description,
+    data,
+    url,
+    likeCount,
+    likedUsers,
+  } = post;
   const [editedText, setEditedText] = useState(description);
   const [editModeText, setEditModeText] = useState(editedText);
   const navigate = useNavigate();
@@ -22,20 +32,17 @@ export default function Post({ post, contador, setContador }) {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const { config } = useContext(DataContextProvider);
+  const userSessionId = useContext(DataContextProvider).userId;
+
+  const isOwner = userId === userSessionId;
 
   const editFieldRef = useRef();
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
   function handleEdit() {
-    console.log("Editando");
-    if (isEditing) {
-      setEditedText(editModeText);
-      setIsEditing(false);
-    } else {
-      setEditModeText(editedText);
-    }
-    setIsEditing(!isEditing);
+    setEditModeText(editedText);
+    setIsEditing(true);
   }
 
   function handleInputChange(e) {
@@ -47,8 +54,10 @@ export default function Post({ post, contador, setContador }) {
   }
 
   function handleInputBlur() {
-    setIsEditing(false);
-    setEditedText(editModeText);
+    setTimeout(() => {
+      setIsEditing(false);
+      setEditedText(editModeText);
+    }, 100)
   }
 
   async function handleKeyDown(event) {
@@ -110,7 +119,7 @@ export default function Post({ post, contador, setContador }) {
   }
 
   return (
-    <Container>
+    <Container data-test="post">
       <Info>
         <User>
           <img
@@ -121,18 +130,28 @@ export default function Post({ post, contador, setContador }) {
             alt=""
           />
         </User>
-        <LikeButton postId={id} />
+        <LikeButton postId={id} likeCount={likeCount} likedUsers={likedUsers} />
       </Info>
       <Content>
         <Top>
-          <UserName>{username}</UserName>
-          <Buttons>
-            <EditIcon onClick={handleEdit} />
-            <DeleteIcon onClick={openDeleteModal} />
-          </Buttons>
+          <UserName
+            data-test="username"
+            onClick={() => {
+              navigate(`/user/${userId}`);
+            }}
+          >
+            {username}
+          </UserName>
+          {isOwner && (
+            <Buttons>
+              <EditIcon data-test="edit-btn" onClick={handleEdit} />
+              <DeleteIcon data-test="delete-btn" onClick={openDeleteModal} />
+            </Buttons>
+          )}
         </Top>
         {isEditing && !loading ? (
           <EditingPost
+            data-test="edit-input"
             ref={editFieldRef}
             type="text"
             value={editedText}
@@ -156,7 +175,7 @@ export default function Post({ post, contador, setContador }) {
             onClick={(text) => navigate(`/hashtag/${text}`)}
             tagStyle={{ color: "#ffffff", fontWeight: 700, cursor: "pointer" }}
           >
-            <Text>
+            <Text data-test="description">
               {loading ? (
                 <ThreeDots
                   height="19"
@@ -176,9 +195,9 @@ export default function Post({ post, contador, setContador }) {
         )}
 
         <PostUrl
-          onClick={() => {
-            window.location.href = url;
-          }}
+          target="_blank"
+          href={url}
+          data-test="link"
         >
           <TextContainer>
             <Title>{data.title}</Title>
@@ -202,8 +221,10 @@ export default function Post({ post, contador, setContador }) {
             to delete this post?
           </p>
           <div>
-            <CancelDelete onClick={closeDeleteModal}>No, go back</CancelDelete>
-            <ConfirmDelete onClick={handleDeleteConfirm}>
+            <CancelDelete data-test="cancel" onClick={closeDeleteModal}>
+              No, go back
+            </CancelDelete>
+            <ConfirmDelete data-test="confirm" onClick={handleDeleteConfirm}>
               Yes, delete it
             </ConfirmDelete>
           </div>
@@ -221,6 +242,11 @@ const Container = styled.div`
   padding-right: 21px;
   flex-shrink: 0;
   padding-bottom: 20px;
+  @media (max-width: 1000px) {
+    border-radius: 0;
+    width: 100%;
+    justify-content: center;
+  }
 `;
 const Info = styled.div`
   display: flex;
@@ -228,6 +254,9 @@ const Info = styled.div`
   padding-top: 16px;
   padding-left: 18px;
   gap: 19px;
+  @media (max-width: 1000px) {
+    padding-left: 15px;
+  }
 `;
 const Top = styled.div`
   display: flex;
@@ -249,6 +278,12 @@ const User = styled.div`
   img:hover {
     cursor: pointer;
   }
+  @media (max-width: 1000px) {
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
 `;
 
 const Content = styled.div`
@@ -257,24 +292,34 @@ const Content = styled.div`
     font-family: "Lato", sans-serif;
     font-weight: 400;
   }
+  @media (max-width: 1000px) {
+    width: 100%;
+  }
 `;
 
 const UserName = styled.p`
   color: #fff;
   font-size: 19px;
+  @media (max-width: 1000px) {
+    font-size: 17px;
+  }
 `;
 
 const Text = styled.p`
   margin-top: 7px;
   color: #b7b7b7;
   font-size: 17px;
+  @media (max-width: 1000px) {
+    font-size: 15px;
+  }
 `;
 
-const PostUrl = styled.div`
+const PostUrl = styled.a`
   &:hover {
     cursor: pointer;
     filter: brightness(0.8);
   }
+  display: block;
   margin-top: 20px;
   border-radius: 11px;
   border: 1px solid #4d4d4d;
@@ -282,13 +327,22 @@ const PostUrl = styled.div`
   height: 155px;
   position: relative;
   min-width: 503px;
+  text-decoration: none;
   img {
     border-radius: 0 11px 11px 0;
     right: 0;
     position: absolute;
-    height: 100%;
+    height: 155px;
     width: 155px;
     top: 0;
+  }
+  @media (max-width: 1000px) {
+    height: 115px;
+    min-width: 0;
+    width: 100%;
+    img {
+      width: 85px;
+    }
   }
 `;
 
@@ -306,24 +360,54 @@ const TextContainer = styled.div`
 const Title = styled.p`
   height: 38px;
   margin-top: 24px;
-  width: 250px;
+  width: 260px;
   color: #cecece;
   font-size: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (max-width: 1000px) {
+    height: 26px;
+    margin-top: 7px;
+    width: 165px;
+    font-size: 11px;
+  }
 `;
 
 const Url = styled.p`
   margin-top: 13px;
-  width: 300px;
+  width: 260px;
   color: #cecece;
   font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  @media (max-width: 1000px) {
+    margin-top: 8px;
+    width: 165px;
+    font-size: 9px;
+  }
 `;
 
 const Description = styled.p`
   height: 39px;
   margin-top: 5px;
-  width: 260px;
+  width: 300px;
   color: #9b9595;
   font-size: 11px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (max-width: 1000px) {
+    margin-top: 4px;
+    height: 44px;
+    width: 165px;
+    font-size: 9px;
+  }
 `;
 
 const EditIcon = styled(PiPencilFill)`
@@ -348,6 +432,7 @@ const EditingPost = styled.textarea`
   border: none;
   border-radius: 7px;
   resize: none;
+  width: 100%;
   &:focus {
     outline: none;
   }

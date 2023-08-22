@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
 import DataContextProvider from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 
 export default function SigninPage() {
-  const { setToken, setConfig, setPicture } = useContext(DataContextProvider);
+  const { setToken, setConfig, setPicture, setUserId } = useContext(DataContextProvider);
   const [isDisable, setIsDisable] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -35,6 +35,8 @@ export default function SigninPage() {
     promise.then((res) => {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("picture", res.data.pictureUrl);
+      localStorage.setItem("userId", res.data.userId);
+      setUserId(res.data.userId);
       setToken(res.data.token);
       setPicture(res.data.pictureUrl);
       setIsDisable(false);
@@ -52,6 +54,20 @@ export default function SigninPage() {
     });
   }
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const picture = localStorage.getItem("picture");
+    const userId = parseInt(localStorage.getItem("userId"));
+
+    if (token && picture && userId) {
+      setToken(token);
+      setPicture(picture);
+      setUserId(userId);
+      setConfig({ headers: { authorization: `Bearer ${token}` } });
+      navigate("/timeline");
+    }
+  }, []);
+
   return (
     <Body>
       <Sidebar>
@@ -64,6 +80,7 @@ export default function SigninPage() {
       <Container>
         <form onSubmit={loginToAccont}>
           <input
+            data-test="email"
             type="email"
             placeholder="e-mail"
             value={formData.email}
@@ -72,6 +89,7 @@ export default function SigninPage() {
             disabled={isDisable}
           />
           <input
+            data-test="password"
             type="password"
             placeholder="password"
             value={formData.password}
@@ -80,10 +98,10 @@ export default function SigninPage() {
             disabled={isDisable}
           />
 
-          <button type="submit" disabled={isDisable}>
+          <button data-test="login-btn" type="submit" disabled={isDisable}>
             {isDisable ? <ThreeDots height="13px" color="#ffffff" /> : "Log In"}
           </button>
-          <StyledLink to="/signup">First time? Create an account!</StyledLink>
+          <StyledLink data-test="sign-up-link" to="/sign-up">First time? Create an account!</StyledLink>
         </form>
       </Container>
     </Body>

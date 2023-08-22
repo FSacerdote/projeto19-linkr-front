@@ -8,7 +8,7 @@ export default function PostForm({ contador, setContador }) {
   const [description, setDescription] = useState("");
   const [habilitado, setHabilitado] = useState(false);
 
-  const { config } = useContext(DataContextProvider);
+  const { config, picture } = useContext(DataContextProvider);
 
   function newPost(event) {
     event.preventDefault();
@@ -26,22 +26,23 @@ export default function PostForm({ contador, setContador }) {
         setContador(contador + 1);
       })
       .catch(() => {
-        alert("Houve um erro ao publicar o seu link");
+        alert("There was an error publishing your link");
         setHabilitado(false);
       });
   }
 
   return (
-    <Container>
+    <Container data-test="publish-box">
       <User>
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          src={picture}
           alt=""
         />
       </User>
       <Form onSubmit={newPost}>
         <p>What are you going to share today?</p>
-        <Url
+        <Url 
+          data-test="link"
           placeholder="http://..."
           type="url"
           value={url}
@@ -50,13 +51,14 @@ export default function PostForm({ contador, setContador }) {
           required
         />
         <Description
+          data-test="description"
           placeholder="Awesome article about #javascript"
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           disabled={habilitado}
         />
-        <button type="submit" disabled={habilitado}>
+        <button data-test="publish-btn" type="submit" disabled={habilitado}>
           {!habilitado ? "Publish" : "Publishing..."}
         </button>
       </Form>
@@ -65,6 +67,7 @@ export default function PostForm({ contador, setContador }) {
 }
 
 const Container = styled.div`
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); 
   flex-shrink: 0;
   margin-top: 43px;
   height: 209px;
@@ -74,6 +77,14 @@ const Container = styled.div`
   display: flex;
   padding-right: 21px;
   margin-bottom: 13px;
+  @media (max-width: 1000px) {
+    justify-content: center;
+    border-radius: 0;
+    margin-top: 20px;
+    height: 164px;
+    margin-bottom: 0;
+    padding-right: 0;
+  }
 `;
 
 const User = styled.div`
@@ -83,6 +94,9 @@ const User = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 27px;
+  }
+  @media (max-width: 1000px) {
+    display: none;
   }
 `;
 
@@ -99,6 +113,7 @@ const Form = styled.form`
     font-style: normal;
     font-weight: 300;
     line-height: normal;
+    text-align: center;
   }
   input {
     width: 503px;
@@ -127,6 +142,25 @@ const Form = styled.form`
       filter: brightness(0.8);
     }
   }
+  @media (max-width: 1000px) {
+    width: 100%;
+    margin-top: 10px;
+    align-items: center;
+    margin-left: 0;
+    p{
+      font-size: 17px;
+    }
+    input{
+      font-size: 13px;
+      width: 95%;
+    }
+    button{
+      font-size: 13px;
+      height: 22px;
+      bottom: 12px;
+      right: 2.5%;
+    }
+  }
 `;
 
 const Url = styled.input`
@@ -151,5 +185,10 @@ const Description = styled.textarea`
   resize: none;
   &:disabled {
     filter: brightness(0.9);
+  }
+  @media (max-width: 1000px) {
+    height: 47px;
+    font-size: 13px;
+    width: 95%;
   }
 `;
