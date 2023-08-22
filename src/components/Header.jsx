@@ -126,6 +126,7 @@ export default function Header() {
                 >
                   <img src={userFound.pictureUrl} alt={userFound.username} />
                   <h3>{userFound.username}</h3>
+                  <p>{userFound.isFollowed?"• following":""}</p>
                 </ProfileLi>
               );
             })}
@@ -260,6 +261,14 @@ const ProfileLi = styled.li`
     text-align: left;
     margin-left: 10px;
     color: #515151;
+  }
+  
+  p{
+    margin-left: 7px;
+    color: #C5C5C5;
+    font-family: "Lato";
+    font-size: 19px;
+    font-weight: 400;
   }
 
   &:hover {
