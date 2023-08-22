@@ -1,21 +1,16 @@
 import { styled } from "styled-components";
 
-import { BsSend } from "react-icons/bs";
-
-export default function Comments() {
+export default function Comments({ name, text, pictureUrl, postOwner }) {
   return (
     <>
       <SCComments>
-        <Avatar
-          src="https://i.pinimg.com/736x/d4/3c/c5/d43cc5c59932cbc99b5ed778b7a67eea.jpg"
-          alt="steven"
-        ></Avatar>
+        <Avatar src={pictureUrl} alt="pictureUrl"></Avatar>
         <Info>
           <p>
-            <Name>Nome</Name>
-            <UserInfo> - following</UserInfo>
+            <Name>{name}</Name>
+            <UserInfo>{name === postOwner ? " • post’s author" : ""}</UserInfo>
           </p>
-          <Text>Texto do comentário</Text>
+          <Text>{text}</Text>
         </Info>
       </SCComments>
       <Line />
@@ -45,7 +40,7 @@ const SCComments = styled.div`
   display: flex;
   color: #fff;
   gap: 18px;
-  padding-top: 23px;
+
   align-items: center;
 `;
 

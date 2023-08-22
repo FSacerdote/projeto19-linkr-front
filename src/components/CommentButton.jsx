@@ -8,18 +8,10 @@ import DataContextProvider from "../context/AuthContext";
 
 export default function CommentButton({ postId, commentCount }) {
   const [comments, setComments] = useState(parseInt(commentCount));
-  //const [users, setUsers] = useState(commentUsers);
-  const { config, userId } = useContext(DataContextProvider);
-  const [loggedUser, setLoggedUser] = useState("nathan");
-  const [isDisabled, setIsDisabled] = useState(false);
-
-  const apiUrl = process.env.REACT_APP_API_URL;
 
   return (
     <SCCommentButton>
-      <button>
-        <CommentOutline />
-      </button>
+      <CommentOutline />
       <CommentCount>
         {comments} <span>{comments === 1 ? "comment" : "comments"}</span>
       </CommentCount>
