@@ -6,10 +6,14 @@ import { useEffect, useRef, useState, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import DataContextProvider from "../context/AuthContext";
+import InfiniteScroll from "react-infinite-scroller";
 
 export default function TimelinePage() {
   const { hashtag } = useParams();
   const [message, setMessage] = useState("Loading...");
+  const [page, setPage] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [morePages, setMorePages] = useState(true);
 
   const { config } = useContext(DataContextProvider);
   const configRef = useRef(config);
@@ -17,22 +21,27 @@ export default function TimelinePage() {
   const [posts, setPosts] = useState(undefined);
 
   useEffect(() => {
-    setPosts(undefined);
+    if (offset === 0) {
+      setPosts(undefined);
+    }
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}`,
+        `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}?limit=10&offset=${offset}`,
         configRef.current
       )
       .then((resposta) => {
+        setOffset((prevOffset) => prevOffset + 10);
         setPosts(resposta.data);
-        console.log(resposta.data);
+        if (resposta.data.length < 10) {
+          setMorePages(false);
+        }
       })
       .catch(() => {
         setMessage(
           "An error occured while trying to fetch the posts, please refresh the page"
         );
       });
-  }, [hashtag]);
+  }, [hashtag, page]);
 
   if (!posts) {
     return (
@@ -55,7 +64,14 @@ export default function TimelinePage() {
         {posts.length === 0 ? (
           <h2>There are no posts yet</h2>
         ) : (
-          posts.map((post) => <Post key={post.id} post={post} />)
+          <InfiniteScroll
+            pageStart={1}
+            loadMore={() => setPage((prevPage) => prevPage + 1)}
+            hasMore={morePages}
+            loader={<h2>Loading...</h2>}
+          >
+            {posts.map((post) => <Post key={post.id} post={post} />)}
+          </InfiniteScroll>
         )}
       </Timeline>
       <TrendingBoard></TrendingBoard>
