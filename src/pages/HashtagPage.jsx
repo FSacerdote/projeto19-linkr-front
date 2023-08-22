@@ -7,6 +7,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import DataContextProvider from "../context/AuthContext";
 import InfiniteScroll from "react-infinite-scroller";
+import { useInterval } from "usehooks-ts";
 
 export default function TimelinePage() {
   const { hashtag } = useParams();
@@ -14,14 +15,43 @@ export default function TimelinePage() {
   const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
   const [morePages, setMorePages] = useState(true);
+  const [newPosts, setNewPosts] = useState([]);
+  const [firstPostId, setFirstPostId] = useState(0);
+  const [alertNewPosts, setAlertNewPosts] = useState(false);
 
   const { config } = useContext(DataContextProvider);
   const configRef = useRef(config);
 
   const [posts, setPosts] = useState(undefined);
 
+  function includeNewPosts() {
+    setAlertNewPosts(false);
+    setPosts((prevPosts) => [...newPosts, prevPosts]);
+  }
+
+  useInterval(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}/new/${firstPostId}`,
+        configRef.current
+      )
+      .then((resposta) => {
+        if (resposta.data.length !== 0) {
+          setOffset((prevOffset) => prevOffset + resposta.data.length);
+          setNewPosts((prevPosts) => [...prevPosts, resposta.data]);
+          setFirstPostId(resposta.data[0].id);
+          setAlertNewPosts(true);
+        }
+      })
+      .catch(() => {
+        setMessage(
+          "An error occured while trying to fetch the posts, please refresh the page"
+        );
+      });
+  }, 15000);
+
   useEffect(() => {
-    if (offset === 0) {
+    if (page === 0) {
       setPosts(undefined);
     }
     axios
@@ -31,9 +61,12 @@ export default function TimelinePage() {
       )
       .then((resposta) => {
         setOffset((prevOffset) => prevOffset + 10);
-        setPosts(resposta.data);
+        setPosts((prevPosts) => [...prevPosts, resposta.data]);
         if (resposta.data.length < 10) {
           setMorePages(false);
+        }
+        if (page === 0) {
+          setFirstPostId(resposta.data[0].id)
         }
       })
       .catch(() => {
@@ -61,9 +94,10 @@ export default function TimelinePage() {
       <Header></Header>
       <Timeline>
         <h1 data-test="hashtag-title"># {hashtag}</h1>
+        {alertNewPosts && <h2 onClick={includeNewPosts}>NewPosts {newPosts.length}</h2>}
         {posts.length === 0 ? (
           <h2>There are no posts yet</h2>
-        ) : (
+        ) : ( 
           <InfiniteScroll
             pageStart={1}
             loadMore={() => setPage((prevPage) => prevPage + 1)}
