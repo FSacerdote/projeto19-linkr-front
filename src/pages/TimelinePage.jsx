@@ -52,8 +52,10 @@ export default function TimelinePage() {
         <h1>timeline</h1>
         <PostForm contador={contador} setContador={setContador}></PostForm>
         {posts.length === 0 ? (
-          <h2 data-test="message">There are no posts yet</h2>
-        ) : (
+          <h2 data-test="message">No posts found from your friends</h2>
+        ) : (posts[0] === -1?(
+          <h2 data-test="message">You don't follow anyone yet. Search for new friends!</h2>
+        ):(
           posts.map((post) => (
             <Post
               key={post.id}
@@ -62,7 +64,7 @@ export default function TimelinePage() {
               setContador={setContador}
             />
           ))
-        )}
+        ))}
       </Timeline>
       <TrendingBoard></TrendingBoard>
     </Page>
