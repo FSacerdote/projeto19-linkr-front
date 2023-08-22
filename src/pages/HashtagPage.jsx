@@ -26,7 +26,7 @@ export default function TimelinePage() {
 
   function includeNewPosts() {
     setAlertNewPosts(false);
-    setPosts((prevPosts) => [...newPosts, prevPosts]);
+    setPosts((prevPosts) => [...newPosts, ...prevPosts]);
   }
 
   useInterval(() => {
@@ -38,7 +38,7 @@ export default function TimelinePage() {
       .then((resposta) => {
         if (resposta.data.length !== 0) {
           setOffset((prevOffset) => prevOffset + resposta.data.length);
-          setNewPosts((prevPosts) => [...prevPosts, resposta.data]);
+          setNewPosts((prevPosts) => [...prevPosts, ...resposta.data]);
           setFirstPostId(resposta.data[0].id);
           setAlertNewPosts(true);
         }
@@ -61,7 +61,7 @@ export default function TimelinePage() {
       )
       .then((resposta) => {
         setOffset((prevOffset) => prevOffset + 10);
-        setPosts((prevPosts) => [...prevPosts, resposta.data]);
+        setPosts((prevPosts) => [...prevPosts, ...resposta.data]);
         if (resposta.data.length < 10) {
           setMorePages(false);
         }
