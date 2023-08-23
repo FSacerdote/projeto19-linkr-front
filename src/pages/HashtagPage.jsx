@@ -6,35 +6,110 @@ import { useEffect, useRef, useState, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import DataContextProvider from "../context/AuthContext";
+import { useInterval } from "usehooks-ts";
+import LoadingMorePosts from "../components/LoadingMorePosts";
+import AlertNewPosts from "../components/AlertNewPosts";
+import { useWindowScroll } from "@uidotdev/usehooks";
 
 export default function TimelinePage() {
   const { hashtag } = useParams();
   const [message, setMessage] = useState("Loading...");
-
+  const [morePages, setMorePages] = useState(false);
+  const [newPosts, setNewPosts] = useState([]);
+  const [firstPostId, setFirstPostId] = useState(0);
+  const [alertNewPosts, setAlertNewPosts] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const { config } = useContext(DataContextProvider);
   const configRef = useRef(config);
-
-  const [posts, setPosts] = useState(undefined);
+  const [ offset, setOffset ] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [{ y }] = useWindowScroll();
 
   useEffect(() => {
-    setPosts(undefined);
+    const windowHeight = window.innerHeight;
+    const fullPageHeight = document.documentElement.scrollHeight;
+    if ((y + windowHeight + 320 >= fullPageHeight) && !isPageLoading && morePages) {
+      setIsPageLoading(true);
+      getPosts(false);
+    } 
+  }, [y]);
+
+  function includeNewPosts() {
+    setAlertNewPosts(false);
+    setPosts((prevPosts) => [...newPosts, ...prevPosts]);
+  }
+
+  useInterval(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}`,
+        `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}?untilId=${firstPostId}`,
         configRef.current
       )
       .then((resposta) => {
-        setPosts(resposta.data);
-        console.log(resposta.data);
+        if (resposta.data.length !== 0) {
+          setOffset((prevOffset) => prevOffset + resposta.data.length);
+          setNewPosts((prevPosts) => [...prevPosts, ...resposta.data]);
+          setFirstPostId(resposta.data[0].id);
+          setAlertNewPosts(true);
+        }
       })
       .catch(() => {
         setMessage(
           "An error occured while trying to fetch the posts, please refresh the page"
         );
       });
+  }, 15000);
+
+  function getPosts(isFirstPage) {
+    const currentOffset = isFirstPage? 0 : offset;
+
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}?limit=10&offset=${currentOffset}`,
+        configRef.current
+      )
+      .then((resposta) => {
+        if (isFirstPage && resposta.data.length === 0) {
+          setIsPageLoading(false);
+          return setPosts(["empty"]);
+        }
+
+        if (isFirstPage) {
+          setPosts(resposta.data);
+          setOffset(10);
+          setFirstPostId(resposta.data[0].id);
+        } else {
+          setPosts((prevPosts) => [...prevPosts, ...resposta.data]);
+          setOffset((prevOffset) => prevOffset + 10);
+        }
+
+        if (resposta.data.length < 10) {
+          setMorePages(false);
+        } else {
+          setMorePages(true);
+        }
+        setIsPageLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsPageLoading(false);
+        setMessage(
+          "An error occured while trying to fetch the posts, please refresh the page"
+        );
+      });
+  }
+
+  useEffect(() => {
+    setIsPageLoading(true);
+    setNewPosts([]);
+    setPosts([]);
+    setMorePages(false);
+    setFirstPostId(0);
+    setOffset(0);
+    getPosts(true);
   }, [hashtag]);
 
-  if (!posts) {
+  if (posts.length === 0) {
     return (
       <Page>
         <Header></Header>
@@ -52,11 +127,15 @@ export default function TimelinePage() {
       <Header></Header>
       <Timeline>
         <h1 data-test="hashtag-title"># {hashtag}</h1>
-        {posts.length === 0 ? (
+        {alertNewPosts && (
+          <AlertNewPosts handleClick={includeNewPosts} number={newPosts.length}></AlertNewPosts>
+        )}
+        {posts[0] === "empty" ? (
           <h2>There are no posts yet</h2>
         ) : (
           posts.map((post) => <Post key={post.id} post={post} />)
         )}
+        {morePages && <LoadingMorePosts />}
       </Timeline>
       <TrendingBoard></TrendingBoard>
     </Page>
