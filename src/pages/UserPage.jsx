@@ -92,7 +92,7 @@ export function UserPage() {
           })}
       </Timeline>
       <SideBar mypage={myPage?"none":""} color={following?"#1877F2":"#FFFFFF"} background={following?"#FFFFFF":"#1877F2"}>
-        <button disabled={button} onClick={handleFollows}>{following?"Unfollow":"Follow"}</button>
+        <button data-test="follow-btn" disabled={button} onClick={handleFollows}>{following?"Unfollow":"Follow"}</button>
         <TrendingBoard></TrendingBoard>
       </SideBar>
     </Page>
