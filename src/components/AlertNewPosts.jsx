@@ -3,7 +3,7 @@ import { BiRefresh } from "react-icons/bi"
 
 export default function AlertNewPosts({number, handleClick}) {
   return (
-    <Alert onClick={handleClick}>
+    <Alert onClick={handleClick} data-test="load-btn">
       <p>{number} new {number === 1? "post" : "posts"}, load more!</p>
       <Refresh></Refresh>
     </Alert>
