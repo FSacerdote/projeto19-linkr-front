@@ -29,9 +29,10 @@ export default function TimelinePage() {
     const windowHeight = window.innerHeight;
     const fullPageHeight = document.documentElement.scrollHeight;
     if ((y + windowHeight + 320 >= fullPageHeight) && !isPageLoading && morePages) {
+      setIsPageLoading(true);
       getPosts(false);
     } 
-  }, [y])
+  }, [y]);
 
   function includeNewPosts() {
     setAlertNewPosts(false);
@@ -39,7 +40,6 @@ export default function TimelinePage() {
   }
 
   useInterval(() => {
-    console.log(`${process.env.REACT_APP_API_URL}/hashtag/${hashtag}?untilId=${firstPostId}`)
     axios
       .get(
         `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}?untilId=${firstPostId}`,
@@ -61,7 +61,6 @@ export default function TimelinePage() {
   }, 15000);
 
   function getPosts(isFirstPage) {
-    setIsPageLoading(true);
     const currentOffset = isFirstPage? 0 : offset;
 
     axios
@@ -101,6 +100,7 @@ export default function TimelinePage() {
   }
 
   useEffect(() => {
+    setIsPageLoading(true);
     setNewPosts([]);
     setPosts([]);
     setMorePages(false);
