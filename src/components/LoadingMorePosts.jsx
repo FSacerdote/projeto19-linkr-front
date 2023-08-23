@@ -11,7 +11,7 @@ export default function LoadingMorePosts() {
 }
 
 const Loading = styled.div`
-  margin: 60px auto 200px auto;
+  margin: 60px auto 300px auto;
   width: 226px;
   height: 78px;
   font-family: "Lato", sans-serif;

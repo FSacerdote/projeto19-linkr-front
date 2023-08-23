@@ -8,22 +8,29 @@ import { useParams } from "react-router-dom";
 import DataContextProvider from "../context/AuthContext";
 import { useInterval } from "usehooks-ts";
 import LoadingMorePosts from "../components/LoadingMorePosts";
+import { useWindowScroll } from "@uidotdev/usehooks";
 
 export default function TimelinePage() {
   const { hashtag } = useParams();
   const [message, setMessage] = useState("Loading...");
-  const [page, setPage] = useState(0);
-  const [offset, setOffset] = useState(0);
   const [morePages, setMorePages] = useState(false);
   const [newPosts, setNewPosts] = useState([]);
   const [firstPostId, setFirstPostId] = useState(0);
   const [alertNewPosts, setAlertNewPosts] = useState(false);
-  const [pageLoading, setPageLoading] = useState(true);
-
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const { config } = useContext(DataContextProvider);
   const configRef = useRef(config);
-
+  const [ offset, setOffset ] = useState(0);
   const [posts, setPosts] = useState([]);
+  const [{ y }] = useWindowScroll();
+
+  useEffect(() => {
+    const windowHeight = window.innerHeight;
+    const fullPageHeight = document.documentElement.scrollHeight;
+    if ((y + windowHeight + 320 >= fullPageHeight) && !isPageLoading && morePages) {
+      getPosts(false);
+    } 
+  }, [y])
 
   function includeNewPosts() {
     setAlertNewPosts(false);
@@ -51,63 +58,52 @@ export default function TimelinePage() {
     //  });
   }, 15000);
 
-  function getPosts(currentPage) {
-    setPageLoading(true);
-    const currentOffset = currentPage === 0 ? 0 : offset;
+  function getPosts(isFirstPage) {
+    setIsPageLoading(true);
+    const currentOffset = isFirstPage? 0 : offset;
+
     axios
       .get(
         `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}?limit=10&offset=${currentOffset}`,
         configRef.current
       )
       .then((resposta) => {
-        if (currentPage === 0 && resposta.data.length === 0) {
-          setPageLoading(false);
+        if (isFirstPage && resposta.data.length === 0) {
+          setIsPageLoading(false);
           return setPosts(["empty"]);
         }
-        setOffset((prevOffset) => prevOffset + 10);
-        setPosts((prevPosts) => [...prevPosts, ...resposta.data]);
+
+        if (isFirstPage) {
+          setPosts(resposta.data);
+          setOffset(10);
+        } else {
+          setPosts((prevPosts) => [...prevPosts, ...resposta.data]);
+          setOffset((prevOffset) => prevOffset + 10);
+        }
 
         if (resposta.data.length < 10) {
           setMorePages(false);
         } else {
           setMorePages(true);
         }
-        setPageLoading(false);
+        setIsPageLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setIsPageLoading(false);
         setMessage(
           "An error occured while trying to fetch the posts, please refresh the page"
         );
       });
   }
 
-  function handleScroll() {
-    const windowHeight = window.innerHeight;
-    const fullPageHeight = document.documentElement.scrollHeight;
-    const scrolledHeight = window.scrollY;
-
-    if (scrolledHeight + windowHeight >= fullPageHeight) {
-      //getPosts(page+1);
-      //setPage(prevPage => prevPage + 1);
-      console.log("oi");
-    }
-  }
-
   useEffect(() => {
     setNewPosts([]);
-    setPageLoading(true);
     setPosts([]);
     setMorePages(false);
     setFirstPostId(0);
     setOffset(0);
-    setPage(0);
-    getPosts(0);
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    getPosts(true);
   }, [hashtag]);
 
   if (posts.length === 0) {
