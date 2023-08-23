@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import DataContextProvider from "../context/AuthContext";
 import { useInterval } from "usehooks-ts";
 import LoadingMorePosts from "../components/LoadingMorePosts";
+import AlertNewPosts from "../components/AlertNewPosts";
 import { useWindowScroll } from "@uidotdev/usehooks";
 
 export default function TimelinePage() {
@@ -38,24 +39,25 @@ export default function TimelinePage() {
   }
 
   useInterval(() => {
-    //axios
-    //  .get(
-    //    `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}/new/${firstPostId}`,
-    //    configRef.current
-    //  )
-    //  .then((resposta) => {
-    //    if (resposta.data.length !== 0) {
-    //      setOffset((prevOffset) => prevOffset + resposta.data.length);
-    //      setNewPosts((prevPosts) => [...prevPosts, ...resposta.data]);
-    //      setFirstPostId(resposta.data[0].id);
-    //      setAlertNewPosts(true);
-    //    }
-    //  })
-    //  .catch(() => {
-    //    setMessage(
-    //      "An error occured while trying to fetch the posts, please refresh the page"
-    //    );
-    //  });
+    console.log(`${process.env.REACT_APP_API_URL}/hashtag/${hashtag}?untilId=${firstPostId}`)
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/hashtag/${hashtag}?untilId=${firstPostId}`,
+        configRef.current
+      )
+      .then((resposta) => {
+        if (resposta.data.length !== 0) {
+          setOffset((prevOffset) => prevOffset + resposta.data.length);
+          setNewPosts((prevPosts) => [...prevPosts, ...resposta.data]);
+          setFirstPostId(resposta.data[0].id);
+          setAlertNewPosts(true);
+        }
+      })
+      .catch(() => {
+        setMessage(
+          "An error occured while trying to fetch the posts, please refresh the page"
+        );
+      });
   }, 15000);
 
   function getPosts(isFirstPage) {
@@ -76,6 +78,7 @@ export default function TimelinePage() {
         if (isFirstPage) {
           setPosts(resposta.data);
           setOffset(10);
+          setFirstPostId(resposta.data[0].id);
         } else {
           setPosts((prevPosts) => [...prevPosts, ...resposta.data]);
           setOffset((prevOffset) => prevOffset + 10);
@@ -125,7 +128,7 @@ export default function TimelinePage() {
       <Timeline>
         <h1 data-test="hashtag-title"># {hashtag}</h1>
         {alertNewPosts && (
-          <h2 onClick={includeNewPosts}>NewPosts {newPosts.length}</h2>
+          <AlertNewPosts handleClick={includeNewPosts} number={newPosts.length}></AlertNewPosts>
         )}
         {posts[0] === "empty" ? (
           <h2>There are no posts yet</h2>
