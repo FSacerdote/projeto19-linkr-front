@@ -194,8 +194,8 @@ export default function Post({ post, contador, setContador }) {
           <button onClick={handleCommentButton}>
             <CommentButton postId={referPost? referPost : id} commentCount={commentCount} />
           </button>
-          <RepostIcon onClick={openRepostModal} />
-          <RepostCounter >{repostCount} re-post{repostCount==="1"? "": "s"}</RepostCounter>
+          <button data-test="repost-btn" onClick={openRepostModal}><RepostIcon onClick={openRepostModal}/></button>
+          <RepostCounter data-test="repost-counter">{repostCount} re-post{repostCount==="1"? "": "s"}</RepostCounter>
         </Info>
         <Content>
           <Top>
@@ -327,10 +327,10 @@ export default function Post({ post, contador, setContador }) {
             this link?
           </p>
           <div>
-            <CancelDelete onClick={closeRepostModal}>
+            <CancelDelete onClick={closeRepostModal} data-test="cancel">
               No, cancel
             </CancelDelete>
-            <ConfirmDelete onClick={handleRepostConfirm}>
+            <ConfirmDelete onClick={handleRepostConfirm} data-test="confirm">
               Yes, share!
             </ConfirmDelete>
           </div>
