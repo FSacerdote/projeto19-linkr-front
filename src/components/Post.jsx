@@ -10,6 +10,9 @@ import { ThreeDots } from "react-loader-spinner";
 import { Tagify } from "react-tagify";
 import DataContextProvider from "../context/AuthContext";
 import { BiRepost } from "react-icons/bi";
+import CommentButton from "./CommentButton";
+import Comments from "./Comments";
+import CommentField from "./CommentField";
 
 Modal.setAppElement("#root");
 
@@ -24,13 +27,16 @@ export default function Post({ post, contador, setContador }) {
     url,
     likeCount,
     likedUsers,
+    commentCount,
   } = post;
   const [editedText, setEditedText] = useState(description);
   const [editModeText, setEditModeText] = useState(editedText);
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [isCommenting, setIsCommenting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [comments, setComments] = useState([]);
 
   const { config } = useContext(DataContextProvider);
   const userSessionId = useContext(DataContextProvider).userId;
@@ -58,7 +64,7 @@ export default function Post({ post, contador, setContador }) {
     setTimeout(() => {
       setIsEditing(false);
       setEditedText(editModeText);
-    }, 100)
+    }, 100);
   }
 
   async function handleKeyDown(event) {
@@ -119,96 +125,141 @@ export default function Post({ post, contador, setContador }) {
     setDeleteModalOpen(false);
   }
 
+  async function handleCommentButton() {
+    setIsCommenting(!isCommenting);
+
+    try {
+      const response = await axios.get(`${apiUrl}/post/${id}/comments`, config);
+      setComments(response.data);
+    } catch (error) {
+      console.log(error.response.message);
+    }
+  }
+
+  useEffect(() => {
+    axios
+      .get(`${apiUrl}/post/${id}/comments`, config)
+      .then((resp) => {
+        setComments(resp.data);
+      })
+      .catch((err) => console.log(err.response.message));
+  }, [apiUrl, comments, config, id]);
+
   return (
     <Container data-test="post" $isRepost={false}>
       {false && <RepostBar><BiRepost></BiRepost><p>Re-posted by <Link to={"/"}>you</Link></p></RepostBar>}
-      <Info>
-        <User>
-          <img
-            onClick={() => {
-              navigate(`/user/${userId}`);
-            }}
-            src={pictureUrl}
-            alt=""
+      <PostContainer>
+        <Info>
+          <User>
+            <img
+              onClick={() => {
+                navigate(`/user/${userId}`);
+              }}
+              src={pictureUrl}
+              alt=""
+            />
+          </User>
+          <LikeButton
+            postId={id}
+            likeCount={likeCount}
+            likedUsers={likedUsers}
           />
-        </User>
-        <LikeButton postId={id} likeCount={likeCount} likedUsers={likedUsers} />
-      </Info>
-      <Content>
-        <Top>
-          <UserName
-            data-test="username"
-            onClick={() => {
-              navigate(`/user/${userId}`);
-            }}
-          >
-            {username}
-          </UserName>
-          {isOwner && (
-            <Buttons>
-              <EditIcon data-test="edit-btn" onClick={handleEdit} />
-              <DeleteIcon data-test="delete-btn" onClick={openDeleteModal} />
-            </Buttons>
+          <button onClick={handleCommentButton}>
+            <CommentButton postId={id} commentCount={commentCount} />
+          </button>
+        </Info>
+        <Content>
+          <Top>
+            <UserName
+              data-test="username"
+              onClick={() => {
+                navigate(`/user/${userId}`);
+              }}
+            >
+              {username}
+            </UserName>
+            {isOwner && (
+              <Buttons>
+                <EditIcon data-test="edit-btn" onClick={handleEdit} />
+                <DeleteIcon data-test="delete-btn" onClick={openDeleteModal} />
+              </Buttons>
+            )}
+          </Top>
+          {isEditing && !loading ? (
+            <EditingPost
+              data-test="edit-input"
+              ref={editFieldRef}
+              type="text"
+              value={editedText}
+              onChange={handleInputChange}
+              onBlur={handleInputBlur}
+              onKeyDown={handleKeyDown}
+            />
+          ) : loading ? (
+            <ThreeDots
+              height="19"
+              width="30"
+              radius="9"
+              color="#b7b7b7"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            />
+          ) : (
+            <Tagify
+              onClick={(text) => navigate(`/hashtag/${text}`)}
+              tagStyle={{
+                color: "#ffffff",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              <Text data-test="description">
+                {loading ? (
+                  <ThreeDots
+                    height="19"
+                    width="30"
+                    radius="9"
+                    color="#b7b7b7"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClassName=""
+                    visible={true}
+                  />
+                ) : (
+                  editedText
+                )}
+              </Text>
+            </Tagify>
           )}
-        </Top>
-        {isEditing && !loading ? (
-          <EditingPost
-            data-test="edit-input"
-            ref={editFieldRef}
-            type="text"
-            value={editedText}
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-            onKeyDown={handleKeyDown}
-          />
-        ) : loading ? (
-          <ThreeDots
-            height="19"
-            width="30"
-            radius="9"
-            color="#b7b7b7"
-            ariaLabel="three-dots-loading"
-            wrapperStyle={{}}
-            wrapperClassName=""
-            visible={true}
-          />
-        ) : (
-          <Tagify
-            onClick={(text) => navigate(`/hashtag/${text}`)}
-            tagStyle={{ color: "#ffffff", fontWeight: 700, cursor: "pointer" }}
-          >
-            <Text data-test="description">
-              {loading ? (
-                <ThreeDots
-                  height="19"
-                  width="30"
-                  radius="9"
-                  color="#b7b7b7"
-                  ariaLabel="three-dots-loading"
-                  wrapperStyle={{}}
-                  wrapperClassName=""
-                  visible={true}
-                />
-              ) : (
-                editedText
-              )}
-            </Text>
-          </Tagify>
-        )}
 
-        <PostUrl
-          target="_blank"
-          href={url}
-          data-test="link"
-        >
-          <TextContainer>
-            <Title>{data.title}</Title>
-            <Description>{data.description}</Description>
-            <Url>{url}</Url>
-          </TextContainer>
-          <img src={data.image} alt="" />
-        </PostUrl>
-      </Content>
+          <PostUrl target="_blank" href={url} data-test="link">
+            <TextContainer>
+              <Title>{data.title}</Title>
+              <Description>{data.description}</Description>
+              <Url>{url}</Url>
+            </TextContainer>
+            <img src={data.image} alt="" />
+          </PostUrl>
+        </Content>
+      </PostContainer>
+      {isCommenting && (
+        <CommentSection>
+          {comments.map((comment) => (
+            <Comments
+              key={comment.id}
+              name={comment.username}
+              text={comment.text}
+              pictureUrl={comment.pictureUrl}
+              postOwner={username}
+              userId={comment.userId}
+            />
+          ))}
+          <CommentField postId={id} />
+        </CommentSection>
+      )}
+
       {isDeleteModalOpen && <BackgroundOverlay />}
       <DeleteModal
         isOpen={isDeleteModalOpen}
@@ -236,6 +287,17 @@ export default function Post({ post, contador, setContador }) {
   );
 }
 
+const CommentSection = styled.div`
+  border-radius: 16px;
+
+  background: #1e1e1e;
+  width: inherit;
+  height: inherit;
+  flex-shrink: 0;
+  margin-top: -74px;
+  padding: 50px 20px;
+`;
+
 const Container = styled.div`
   position: relative;
   margin-top: ${(props) => {
@@ -244,6 +306,14 @@ const Container = styled.div`
         }
         return "16px";
     }};
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+`;
+
+const PostContainer = styled.div`
+  margin-top: 16px;
+  z-index: 1;
   border-radius: 16px;
   background: #171717;
   display: flex;
@@ -259,8 +329,10 @@ const Container = styled.div`
 const Info = styled.div`
   display: flex;
   flex-direction: column;
+
+  align-items: center;
   padding-top: 16px;
-  padding-left: 18px;
+  padding-left: 5px;
   gap: 19px;
   @media (max-width: 1000px) {
     padding-left: 15px;
@@ -296,6 +368,8 @@ const User = styled.div`
 
 const Content = styled.div`
   margin-left: 18px;
+  padding-right: 21px;
+
   p {
     font-family: "Lato", sans-serif;
     font-weight: 400;

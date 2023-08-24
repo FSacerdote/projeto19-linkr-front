@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-lone-blocks */
 import { useContext, useState, useEffect } from "react";
 import { Body, Container, Sidebar, StyledLink } from "./FormsStyle";
 import DataContextProvider from "../../context/AuthContext";
@@ -6,7 +8,8 @@ import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 
 export default function SigninPage() {
-  const { setToken, setConfig, setPicture, setUserId } = useContext(DataContextProvider);
+  const { setToken, setConfig, setPicture, setUserId } =
+    useContext(DataContextProvider);
   const [isDisable, setIsDisable] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -101,7 +104,9 @@ export default function SigninPage() {
           <button data-test="login-btn" type="submit" disabled={isDisable}>
             {isDisable ? <ThreeDots height="13px" color="#ffffff" /> : "Log In"}
           </button>
-          <StyledLink data-test="sign-up-link" to="/sign-up">First time? Create an account!</StyledLink>
+          <StyledLink data-test="sign-up-link" to="/sign-up">
+            First time? Create an account!
+          </StyledLink>
         </form>
       </Container>
     </Body>
