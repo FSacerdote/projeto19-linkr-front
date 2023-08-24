@@ -34,7 +34,7 @@ export function UserPage() {
   useEffect(() => {
     const windowHeight = window.innerHeight;
     const fullPageHeight = document.documentElement.scrollHeight;
-    if ((y + windowHeight + 320 >= fullPageHeight) && !isPageLoading && morePages) {
+    if ((y + windowHeight + 320 >= fullPageHeight) && !isPageLoading && morePages && offset >= 10) {
       setIsPageLoading(true);
       getPosts(false);
     } 
