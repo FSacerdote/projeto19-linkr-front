@@ -28,6 +28,9 @@ export default function Post({ post, contador, setContador }) {
     likeCount,
     likedUsers,
     commentCount,
+    referPost,
+    reposterUsername,
+    repostCount
   } = post;
   const [editedText, setEditedText] = useState(description);
   const [editModeText, setEditModeText] = useState(editedText);
@@ -36,6 +39,7 @@ export default function Post({ post, contador, setContador }) {
   const [isCommenting, setIsCommenting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [isRepostModalOpen, setRepostModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
 
   const { config } = useContext(DataContextProvider);
@@ -117,8 +121,31 @@ export default function Post({ post, contador, setContador }) {
         setDeleteModalOpen(false);
       });
   }
+
+  function handleRepostConfirm() {
+    axios
+      .post(`${apiUrl}/repost/${referPost? referPost : id}`, config)
+      .then((resp) => {
+        console.log(resp.data);
+        setContador(contador - 1);
+        setRepostModalOpen(false);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setRepostModalOpen(false);
+      });
+  }
+
   function openDeleteModal() {
     setDeleteModalOpen(true);
+  }
+
+  function openRepostModal() {
+    setRepostModalOpen(true);
+  }
+
+  function closeRepostModal() {
+    setRepostModalOpen(false);
   }
 
   function closeDeleteModal() {
@@ -129,7 +156,7 @@ export default function Post({ post, contador, setContador }) {
     setIsCommenting(!isCommenting);
 
     try {
-      const response = await axios.get(`${apiUrl}/post/${id}/comments`, config);
+      const response = await axios.get(`${apiUrl}/post/${referPost? referPost : id}/comments`, config);
       setComments(response.data);
     } catch (error) {
       console.log(error.response.message);
@@ -146,8 +173,8 @@ export default function Post({ post, contador, setContador }) {
   }, [apiUrl, comments, config, id]);
 
   return (
-    <Container data-test="post" $isRepost={false}>
-      {false && <RepostBar><BiRepost></BiRepost><p>Re-posted by <Link to={"/"}>you</Link></p></RepostBar>}
+    <Container data-test="post" $isRepost={referPost? true : false}>
+      {referPost && <RepostBar><BiRepost></BiRepost><p>Re-posted by <span>{reposterUsername}</span></p></RepostBar>}
       <PostContainer>
         <Info>
           <User>
@@ -160,13 +187,15 @@ export default function Post({ post, contador, setContador }) {
             />
           </User>
           <LikeButton
-            postId={id}
+            postId={referPost? referPost : id}
             likeCount={likeCount}
             likedUsers={likedUsers}
           />
           <button onClick={handleCommentButton}>
-            <CommentButton postId={id} commentCount={commentCount} />
+            <CommentButton postId={referPost? referPost : id} commentCount={commentCount} />
           </button>
+          <RepostIcon onClick={openRepostModal} />
+          <RepostCounter >{repostCount} re-post{repostCount==="1"? "": "s"}</RepostCounter>
         </Info>
         <Content>
           <Top>
@@ -180,7 +209,7 @@ export default function Post({ post, contador, setContador }) {
             </UserName>
             {isOwner && (
               <Buttons>
-                <EditIcon data-test="edit-btn" onClick={handleEdit} />
+                {!referPost && <EditIcon data-test="edit-btn" onClick={handleEdit} />}
                 <DeleteIcon data-test="delete-btn" onClick={openDeleteModal} />
               </Buttons>
             )}
@@ -256,7 +285,7 @@ export default function Post({ post, contador, setContador }) {
               userId={comment.userId}
             />
           ))}
-          <CommentField postId={id} />
+          <CommentField postId={referPost? referPost : id} />
         </CommentSection>
       )}
 
@@ -283,6 +312,30 @@ export default function Post({ post, contador, setContador }) {
           </div>
         </DeleteOptions>
       </DeleteModal>
+
+      {isRepostModalOpen && <BackgroundOverlay />}
+      <RepostModal
+        isOpen={isRepostModalOpen}
+        onRequestClose={closeRepostModal}
+        contentLabel="Repost Modal"
+        overlayClassName="custom-overlay"
+      >
+        <DeleteOptions>
+          <p>
+            Do you want to re-post
+            <br />
+            this link?
+          </p>
+          <div>
+            <CancelDelete onClick={closeRepostModal}>
+              No, cancel
+            </CancelDelete>
+            <ConfirmDelete onClick={handleRepostConfirm}>
+              Yes, share!
+            </ConfirmDelete>
+          </div>
+        </DeleteOptions>
+      </RepostModal>
     </Container>
   );
 }
@@ -424,6 +477,7 @@ const PostUrl = styled.a`
     width: 100%;
     img {
       width: 85px;
+      height: 114px;
     }
   }
 `;
@@ -520,6 +574,7 @@ const EditingPost = styled.textarea`
   }
 `;
 const DeleteModal = styled(Modal)``;
+const RepostModal = styled(Modal)``;
 const DeleteOptions = styled.div`
   position: fixed;
   top: 0;
@@ -578,33 +633,39 @@ const BackgroundOverlay = styled.div`
 
 const RepostBar = styled.div`
   position: absolute;
-  height: 38px;
+  height: 50px;
   width: 100%;
-  top: -26px;
+  top: -20px;
   background-color: #1e1e1e;
   color: white;
   font-size: 25px;
   border-top-right-radius: 16px;
   border-top-left-radius: 16px;
-  border-bottom: 5px solid #171717;
   display: flex;
-  align-items: center;
   gap: 5px;
   padding-left: 10px;
+  padding-top: 8px;
   
   p {
     font-weight: 400;
     font-family: "Lato", sans-serif;
     font-size: 11px;
     letter-spacing: 0.5px;
+    padding-top: 6px;
   }
 
-  a {
+  span {
     font-weight: 700;
-    color: white;
-    font-family: "Lato", sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.5px;
-    text-decoration: none;
   }
+`;
+
+const RepostIcon = styled(BiRepost)`
+  font-size: 30px;
+  color: #ffffff;
+`;
+
+const RepostCounter = styled.p`
+  color: #ffffff;
+  font-size: 11px;
+  margin-top: -22px;
 `;
