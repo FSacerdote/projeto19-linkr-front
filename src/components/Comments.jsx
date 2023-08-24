@@ -1,6 +1,32 @@
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
+import DataContextProvider from "../context/AuthContext";
 
-export default function Comments({ name, text, pictureUrl, postOwner }) {
+export default function Comments({
+  name,
+  text,
+  pictureUrl,
+  postOwner,
+  userId,
+}) {
+  const [following, setFollowing] = useState();
+  const { config } = useContext(DataContextProvider);
+  const userSessionId = useContext(DataContextProvider).userId;
+
+  const isOwner = userId === userSessionId;
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/follows/${userId}`, config)
+      .then((resp) => {
+        setFollowing(resp.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [config, userId]);
+
   return (
     <>
       <SCComments>
@@ -8,7 +34,13 @@ export default function Comments({ name, text, pictureUrl, postOwner }) {
         <Info>
           <p>
             <Name>{name}</Name>
-            <UserInfo>{name === postOwner ? " • post’s author" : ""}</UserInfo>
+            <UserInfo>
+              {name === postOwner
+                ? " • post’s author"
+                : following && !isOwner
+                ? " • following"
+                : ""}
+            </UserInfo>
           </p>
           <Text>{text}</Text>
         </Info>

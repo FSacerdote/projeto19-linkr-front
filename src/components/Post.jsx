@@ -242,6 +242,7 @@ export default function Post({ post, contador, setContador }) {
               text={comment.text}
               pictureUrl={comment.pictureUrl}
               postOwner={username}
+              userId={comment.userId}
             />
           ))}
           <CommentField postId={id} />

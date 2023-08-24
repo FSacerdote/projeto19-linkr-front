@@ -6,7 +6,7 @@ import { AiOutlineComment } from "react-icons/ai";
 import { styled } from "styled-components";
 import DataContextProvider from "../context/AuthContext";
 
-export default function CommentButton({ postId, commentCount }) {
+export default function CommentButton({ postId, commentCount, follower }) {
   const [comments, setComments] = useState(parseInt(commentCount));
 
   return (
