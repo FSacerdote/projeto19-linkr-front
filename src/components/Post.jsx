@@ -135,6 +135,15 @@ export default function Post({ post, contador, setContador }) {
     }
   }
 
+  useEffect(() => {
+    axios
+      .get(`${apiUrl}/post/${id}/comments`, config)
+      .then((resp) => {
+        setComments(resp.data);
+      })
+      .catch((err) => console.log(err.response.message));
+  }, [apiUrl, comments, config, id]);
+
   return (
     <Container data-test="post">
       <PostContainer>
