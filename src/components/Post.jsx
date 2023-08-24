@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import LikeButton from "./LikeButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { PiPencilFill } from "react-icons/pi";
 import { AiFillDelete } from "react-icons/ai";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -9,6 +9,7 @@ import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { Tagify } from "react-tagify";
 import DataContextProvider from "../context/AuthContext";
+import { BiRepost } from "react-icons/bi";
 
 Modal.setAppElement("#root");
 
@@ -119,7 +120,8 @@ export default function Post({ post, contador, setContador }) {
   }
 
   return (
-    <Container data-test="post">
+    <Container data-test="post" $isRepost={false}>
+      {false && <RepostBar><BiRepost></BiRepost><p>Re-posted by <Link to={"/"}>you</Link></p></RepostBar>}
       <Info>
         <User>
           <img
@@ -235,7 +237,13 @@ export default function Post({ post, contador, setContador }) {
 }
 
 const Container = styled.div`
-  margin-top: 16px;
+  position: relative;
+  margin-top: ${(props) => {
+        if (props.$isRepost) {
+            return "40px";
+        }
+        return "16px";
+    }};
   border-radius: 16px;
   background: #171717;
   display: flex;
@@ -492,4 +500,37 @@ const BackgroundOverlay = styled.div`
   height: 100%;
   background: rgba(255, 255, 255, 0.9);
   z-index: 10;
+`;
+
+const RepostBar = styled.div`
+  position: absolute;
+  height: 38px;
+  width: 100%;
+  top: -26px;
+  background-color: #1e1e1e;
+  color: white;
+  font-size: 25px;
+  border-top-right-radius: 16px;
+  border-top-left-radius: 16px;
+  border-bottom: 5px solid #171717;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-left: 10px;
+  
+  p {
+    font-weight: 400;
+    font-family: "Lato", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+
+  a {
+    font-weight: 700;
+    color: white;
+    font-family: "Lato", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+  }
 `;
