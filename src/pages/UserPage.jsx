@@ -172,7 +172,7 @@ export function UserPage() {
         {alertNewPosts && (
           <AlertNewPosts handleClick={includeNewPosts} number={newPosts.length}></AlertNewPosts>
         )}
-        {postList &&
+        {(postList && postList[0] !== "empty") &&
           postList.map((post) => {
             return <Post key={post.id} post={post} />;
           })}
