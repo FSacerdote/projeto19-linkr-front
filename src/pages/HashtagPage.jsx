@@ -24,6 +24,7 @@ export default function TimelinePage() {
   const [offset, setOffset] = useState(0);
   const [posts, setPosts] = useState([]);
   const [{ y }] = useWindowScroll();
+  const [contador, setContador] = useState(0);
 
   useEffect(() => {
     const windowHeight = window.innerHeight;
@@ -143,7 +144,7 @@ export default function TimelinePage() {
         {posts[0] === "empty" ? (
           <h2>There are no posts yet</h2>
         ) : (
-          posts.map((post) => <Post key={post.id} post={post} />)
+          posts.map((post) => <Post key={post.id} post={post} contador={contador} setContador={setContador}/>)
         )}
         {morePages && <LoadingMorePosts />}
       </Timeline>

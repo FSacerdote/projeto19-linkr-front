@@ -19,6 +19,7 @@ export function UserPage() {
   const [userInfo, setUserInfo] = useState({});
   const [following, setFollowing] = useState(false);
   const [button, setButton] = useState(true);
+  const [contador, setContador] = useState(0);
 
   const [{ y }] = useWindowScroll();
   const [offset, setOffset] = useState(0);
@@ -194,7 +195,7 @@ export function UserPage() {
         {postList &&
           postList[0] !== "empty" &&
           postList.map((post) => {
-            return <Post key={post.id} post={post} />;
+            return <Post key={post.id} post={post} contador={contador} setContador={setContador}/>;
           })}
         {morePages && <LoadingMorePosts />}
       </Timeline>
