@@ -10,6 +10,7 @@ import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { Tagify } from "react-tagify";
 import DataContextProvider from "../context/AuthContext";
+import { BiRepost } from "react-icons/bi";
 import CommentButton from "./CommentButton";
 import Comments from "./Comments";
 
@@ -27,6 +28,9 @@ export default function Post({ post, contador, setContador }) {
     likeCount,
     likedUsers,
     commentCount,
+    referPost,
+    reposterUsername,
+    repostCount,
   } = post;
   const [editedText, setEditedText] = useState(description);
   const [editModeText, setEditModeText] = useState(editedText);
@@ -35,6 +39,7 @@ export default function Post({ post, contador, setContador }) {
   const [isCommenting, setIsCommenting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [isRepostModalOpen, setRepostModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
 
   const { config, picture } = useContext(DataContextProvider);
@@ -116,8 +121,31 @@ export default function Post({ post, contador, setContador }) {
         setDeleteModalOpen(false);
       });
   }
+
+  function handleRepostConfirm() {
+    axios
+      .post(`${apiUrl}/repost/${referPost ? referPost : id}`, config)
+      .then((resp) => {
+        console.log(resp.data);
+        setContador(contador - 1);
+        setRepostModalOpen(false);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setRepostModalOpen(false);
+      });
+  }
+
   function openDeleteModal() {
     setDeleteModalOpen(true);
+  }
+
+  function openRepostModal() {
+    setRepostModalOpen(true);
+  }
+
+  function closeRepostModal() {
+    setRepostModalOpen(false);
   }
 
   function closeDeleteModal() {
@@ -128,7 +156,10 @@ export default function Post({ post, contador, setContador }) {
     setIsCommenting(!isCommenting);
 
     try {
-      const response = await axios.get(`${apiUrl}/post/${id}/comments`, config);
+      const response = await axios.get(
+        `${apiUrl}/post/${referPost ? referPost : id}/comments`,
+        config
+      );
       setComments(response.data);
     } catch (error) {
       console.log(error.response.message);
@@ -166,7 +197,15 @@ export default function Post({ post, contador, setContador }) {
   }
 
   return (
-    <Container data-test="post">
+    <Container data-test="post" $isRepost={referPost ? true : false}>
+      {referPost && (
+        <RepostBar>
+          <BiRepost></BiRepost>
+          <p>
+            Re-posted by <span>{reposterUsername}</span>
+          </p>
+        </RepostBar>
+      )}
       <PostContainer>
         <Info>
           <User>
@@ -179,13 +218,22 @@ export default function Post({ post, contador, setContador }) {
             />
           </User>
           <LikeButton
-            postId={id}
+            postId={referPost ? referPost : id}
             likeCount={likeCount}
             likedUsers={likedUsers}
           />
           <button onClick={handleCommentButton}>
-            <CommentButton postId={id} commentCount={commentCount} />
+            <CommentButton
+              postId={referPost ? referPost : id}
+              commentCount={commentCount}
+            />
           </button>
+          <button data-test="repost-btn" onClick={openRepostModal}>
+            <RepostIcon onClick={openRepostModal} />
+          </button>
+          <RepostCounter data-test="repost-counter">
+            {repostCount} re-post{repostCount === "1" ? "" : "s"}
+          </RepostCounter>
         </Info>
         <Content>
           <Top>
@@ -199,7 +247,9 @@ export default function Post({ post, contador, setContador }) {
             </UserName>
             {isOwner && (
               <Buttons>
-                <EditIcon data-test="edit-btn" onClick={handleEdit} />
+                {!referPost && (
+                  <EditIcon data-test="edit-btn" onClick={handleEdit} />
+                )}
                 <DeleteIcon data-test="delete-btn" onClick={openDeleteModal} />
               </Buttons>
             )}
@@ -275,7 +325,6 @@ export default function Post({ post, contador, setContador }) {
               userId={comment.userId}
             />
           ))}
-
           <UserComment>
             <Avatar src={picture} alt="picture"></Avatar>
             <WriteField
@@ -313,6 +362,30 @@ export default function Post({ post, contador, setContador }) {
           </div>
         </DeleteOptions>
       </DeleteModal>
+
+      {isRepostModalOpen && <BackgroundOverlay />}
+      <RepostModal
+        isOpen={isRepostModalOpen}
+        onRequestClose={closeRepostModal}
+        contentLabel="Repost Modal"
+        overlayClassName="custom-overlay"
+      >
+        <DeleteOptions>
+          <p>
+            Do you want to re-post
+            <br />
+            this link?
+          </p>
+          <div>
+            <CancelDelete onClick={closeRepostModal} data-test="cancel">
+              No, cancel
+            </CancelDelete>
+            <ConfirmDelete onClick={handleRepostConfirm} data-test="confirm">
+              Yes, share!
+            </ConfirmDelete>
+          </div>
+        </DeleteOptions>
+      </RepostModal>
     </Container>
   );
 }
@@ -329,6 +402,13 @@ const CommentSection = styled.div`
 `;
 
 const Container = styled.div`
+  position: relative;
+  margin-top: ${(props) => {
+    if (props.$isRepost) {
+      return "40px";
+    }
+    return "16px";
+  }};
   display: flex;
   flex-direction: column;
   gap: 44px;
@@ -447,6 +527,7 @@ const PostUrl = styled.a`
     width: 100%;
     img {
       width: 85px;
+      height: 114px;
     }
   }
 `;
@@ -543,6 +624,7 @@ const EditingPost = styled.textarea`
   }
 `;
 const DeleteModal = styled(Modal)``;
+const RepostModal = styled(Modal)``;
 const DeleteOptions = styled.div`
   position: fixed;
   top: 0;
@@ -631,4 +713,43 @@ const Avatar = styled.img`
   height: 39px;
   object-fit: cover;
   border-radius: 50%;
+`;
+
+const RepostBar = styled.div`
+  position: absolute;
+  height: 50px;
+  width: 100%;
+  top: -20px;
+  background-color: #1e1e1e;
+  color: white;
+  font-size: 25px;
+  border-top-right-radius: 16px;
+  border-top-left-radius: 16px;
+  display: flex;
+  gap: 5px;
+  padding-left: 10px;
+  padding-top: 8px;
+
+  p {
+    font-weight: 400;
+    font-family: "Lato", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    padding-top: 6px;
+  }
+
+  span {
+    font-weight: 700;
+  }
+`;
+
+const RepostIcon = styled(BiRepost)`
+  font-size: 30px;
+  color: #ffffff;
+`;
+
+const RepostCounter = styled.p`
+  color: #ffffff;
+  font-size: 11px;
+  margin-top: -22px;
 `;
