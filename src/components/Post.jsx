@@ -213,7 +213,7 @@ export default function Post({ post, contador, setContador }) {
             likeCount={likeCount}
             likedUsers={likedUsers}
           />
-          <button onClick={handleCommentButton}>
+          <button onClick={handleCommentButton} data-test="comment-btn">
             <CommentButton
               postId={referPost ? referPost : id}
               commentCount={commentCount}
@@ -305,7 +305,7 @@ export default function Post({ post, contador, setContador }) {
         </Content>
       </PostContainer>
       {isCommenting && (
-        <CommentSection>
+        <CommentSection data-test="comment-box">
           {comments.map((comment) => (
             <Comments
               key={comment.id}
@@ -324,8 +324,11 @@ export default function Post({ post, contador, setContador }) {
               value={text}
               onChange={(e) => setText(e.target.value)}
               name="text"
+              data-test="comment-input"
             ></WriteField>
-            <SendButton onClick={handleSubmitComment} />
+            <button data-test="comment-submit" onClick={handleSubmitComment}>
+              <SendButton />
+            </button>
           </UserComment>
         </CommentSection>
       )}
