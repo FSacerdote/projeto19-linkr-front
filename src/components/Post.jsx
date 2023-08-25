@@ -333,7 +333,6 @@ export default function Post({ post, contador, setContador }) {
           </UserComment>
         </CommentSection>
       )}
-
       {isDeleteModalOpen && <BackgroundOverlay />}
       <DeleteModal
         isOpen={isDeleteModalOpen}
