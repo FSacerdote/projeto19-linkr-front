@@ -58,7 +58,7 @@ export function UserPage() {
       )
       .then((resposta) => {
         const noRepeatedPosts = resposta.data.filter((newPost) => {
-          return postList.some((post) => post.id === newPost.id);
+          return postList.some((post) => post.id !== newPost.id);
         });
         if (noRepeatedPosts.length !== 0 && noRepeatedPosts[0] !== -1) {
           setOffset((prevOffset) => prevOffset + noRepeatedPosts.length);
