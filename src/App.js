@@ -16,6 +16,7 @@ function App() {
   const [config, setConfig] = useState({
     headers: { authorization: `Bearer ${token}` },
   });
+  const [loggedUsername, setLoggedUsername] = useState(localStorage.getItem("username"));
   const contextValue = {
     token,
     setToken,
@@ -25,6 +26,8 @@ function App() {
     setConfig,
     userId,
     setUserId,
+    loggedUsername,
+    setLoggedUsername
   };
 
   return (

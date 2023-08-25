@@ -42,7 +42,7 @@ export default function Post({ post, contador, setContador }) {
   const [isRepostModalOpen, setRepostModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
 
-  const { config, picture } = useContext(DataContextProvider);
+  const { config, picture, loggedUsername } = useContext(DataContextProvider);
   const userSessionId = useContext(DataContextProvider).userId;
 
   const isOwner = userId === userSessionId;
@@ -236,7 +236,7 @@ export default function Post({ post, contador, setContador }) {
             >
               {username}
             </UserName>
-            {isOwner && (
+            {(isOwner || (referPost && reposterUsername === loggedUsername)) && (
               <Buttons>
                 {!referPost && (
                   <EditIcon data-test="edit-btn" onClick={handleEdit} />
