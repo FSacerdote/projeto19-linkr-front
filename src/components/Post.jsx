@@ -12,7 +12,6 @@ import { Tagify } from "react-tagify";
 import DataContextProvider from "../context/AuthContext";
 import CommentButton from "./CommentButton";
 import Comments from "./Comments";
-import CommentField from "./CommentField";
 
 Modal.setAppElement("#root");
 
