@@ -11,8 +11,8 @@ export default function CommentButton({ postId, commentCount, follower }) {
 
   return (
     <SCCommentButton>
-      <CommentOutline />
-      <CommentCount>
+      <CommentOutline data-test="comment-btn" />
+      <CommentCount data-test="comment-counter">
         {comments} <span>{comments === 1 ? "comment" : "comments"}</span>
       </CommentCount>
     </SCCommentButton>

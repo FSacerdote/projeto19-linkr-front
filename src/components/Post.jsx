@@ -305,7 +305,7 @@ export default function Post({ post, contador, setContador }) {
         </Content>
       </PostContainer>
       {isCommenting && (
-        <CommentSection>
+        <CommentSection data-test="comment-box">
           {comments.map((comment) => (
             <Comments
               key={comment.id}
@@ -314,6 +314,7 @@ export default function Post({ post, contador, setContador }) {
               pictureUrl={comment.pictureUrl}
               postOwner={username}
               userId={comment.userId}
+              data-test="comment"
             />
           ))}
           <UserComment>
@@ -324,8 +325,12 @@ export default function Post({ post, contador, setContador }) {
               value={text}
               onChange={(e) => setText(e.target.value)}
               name="text"
+              data-test="comment-input"
             ></WriteField>
-            <SendButton onClick={handleSubmitComment} />
+            <SendButton
+              onClick={handleSubmitComment}
+              data-test="comment-submit"
+            />
           </UserComment>
         </CommentSection>
       )}
