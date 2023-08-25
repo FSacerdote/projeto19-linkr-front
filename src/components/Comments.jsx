@@ -29,7 +29,7 @@ export default function Comments({
 
   return (
     <>
-      <SCComments>
+      <SCComments data-test="comment">
         <Avatar src={pictureUrl} alt="pictureUrl"></Avatar>
         <Info>
           <p>
