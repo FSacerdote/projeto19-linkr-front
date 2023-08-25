@@ -314,7 +314,6 @@ export default function Post({ post, contador, setContador }) {
               pictureUrl={comment.pictureUrl}
               postOwner={username}
               userId={comment.userId}
-              data-test="comment"
             />
           ))}
           <UserComment>
