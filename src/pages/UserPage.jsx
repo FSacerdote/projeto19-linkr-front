@@ -141,7 +141,7 @@ export function UserPage() {
         console.log(erro);
       });
     getInfo();
-  }, [id]);
+  }, [id, contador]);
 
   function handleFollows() {
     setButton(true);

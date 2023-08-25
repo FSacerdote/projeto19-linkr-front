@@ -115,7 +115,7 @@ export default function TimelinePage() {
     setFirstPostId(0);
     setOffset(0);
     getPosts(true);
-  }, [hashtag]);
+  }, [hashtag, contador]);
 
   if (posts.length === 0) {
     return (

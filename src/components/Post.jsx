@@ -124,7 +124,7 @@ export default function Post({ post, contador, setContador }) {
 
   function handleRepostConfirm() {
     axios
-      .post(`${apiUrl}/repost/${referPost ? referPost : id}`, config)
+      .post(`${apiUrl}/repost/${referPost ? referPost : id}`, "", config)
       .then((resp) => {
         console.log(resp.data);
         setContador(contador - 1);
