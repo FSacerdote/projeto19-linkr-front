@@ -21,7 +21,7 @@ export function UserPage() {
   const [button, setButton] = useState(true);
 
   const [{ y }] = useWindowScroll();
-  const [ offset, setOffset ] = useState(0);
+  const [offset, setOffset] = useState(0);
   const [morePages, setMorePages] = useState(false);
   const [newPosts, setNewPosts] = useState([]);
   const [firstPostId, setFirstPostId] = useState(0);
@@ -29,15 +29,19 @@ export function UserPage() {
   const [isPageLoading, setIsPageLoading] = useState(true);
 
   const { config, userId } = useContext(DataContextProvider);
-  const myPage = (Number(userId) === Number(id));
+  const myPage = Number(userId) === Number(id);
 
   useEffect(() => {
     const windowHeight = window.innerHeight;
     const fullPageHeight = document.documentElement.scrollHeight;
-    if ((y + windowHeight + 320 >= fullPageHeight) && !isPageLoading && morePages && offset >= 10) {
+    if (
+      y + windowHeight + 320 >= fullPageHeight &&
+      !isPageLoading &&
+      morePages
+    ) {
       setIsPageLoading(true);
       getPosts(false);
-    } 
+    }
   }, [y]);
 
   function includeNewPosts() {
@@ -52,7 +56,10 @@ export function UserPage() {
         config
       )
       .then((resposta) => {
-        if (resposta.data.length !== 0) {
+        const noRepeatedPosts = resposta.data.filter((newPost) => {
+          return postList.some((post) => post.id === newPost.id);
+        });
+        if (noRepeatedPosts.length !== 0) {
           setOffset((prevOffset) => prevOffset + resposta.data.length);
           setNewPosts((prevPosts) => [...prevPosts, ...resposta.data]);
           setFirstPostId(resposta.data[0].id);
@@ -65,7 +72,7 @@ export function UserPage() {
   }, 15000);
 
   function getPosts(isFirstPage) {
-    const currentOffset = isFirstPage? 0 : offset;
+    const currentOffset = isFirstPage ? 0 : offset;
 
     axios
       .get(
@@ -123,39 +130,48 @@ export function UserPage() {
     }
 
     if (!id) return navigate("/timeline");
-    axios.get(`${process.env.REACT_APP_API_URL}/follows/${id}`, config)
-      .then((resposta)=>{
-        setButton(false)
-        setFollowing(resposta.data.follows)
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/follows/${id}`, config)
+      .then((resposta) => {
+        setButton(false);
+        setFollowing(resposta.data.follows);
       })
-      .catch((erro)=>{console.log(erro)})
+      .catch((erro) => {
+        console.log(erro);
+      });
     getInfo();
   }, [id]);
 
-  function handleFollows(){
-    setButton(true)
-    if(following){
-      axios.delete(`${process.env.REACT_APP_API_URL}/follows/${id}`, config)
-        .then(()=>{
-          setButton(false)
-          setFollowing(false)
+  function handleFollows() {
+    setButton(true);
+    if (following) {
+      axios
+        .delete(`${process.env.REACT_APP_API_URL}/follows/${id}`, config)
+        .then(() => {
+          setButton(false);
+          setFollowing(false);
         })
-        .catch(()=>{
-          alert("Não foi possível completar a requisição")
+        .catch(() => {
+          alert("Não foi possível completar a requisição");
+        });
+    } else {
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/follows`,
+          { followedId: id },
+          config
+        )
+        .then(() => {
+          setButton(false);
+          setFollowing(true);
         })
-    }else{
-      axios.post(`${process.env.REACT_APP_API_URL}/follows`, {followedId: id}, config)
-        .then(()=>{
-          setButton(false)
-          setFollowing(true)
-        })
-        .catch(()=>{
-          alert("Não foi possível completar a requisição")
-        })
+        .catch(() => {
+          alert("Não foi possível completar a requisição");
+        });
     }
   }
 
-  console.log(following)
+  console.log(following);
 
   return (
     <Page>
@@ -170,16 +186,30 @@ export function UserPage() {
           )}
         </UserTitleContainer>
         {alertNewPosts && (
-          <AlertNewPosts handleClick={includeNewPosts} number={newPosts.length}></AlertNewPosts>
+          <AlertNewPosts
+            handleClick={includeNewPosts}
+            number={newPosts.length}
+          ></AlertNewPosts>
         )}
-        {(postList && postList[0] !== "empty") &&
+        {postList &&
+          postList[0] !== "empty" &&
           postList.map((post) => {
             return <Post key={post.id} post={post} />;
           })}
         {morePages && <LoadingMorePosts />}
       </Timeline>
-      <SideBar mypage={myPage?"none":""} color={following?"#1877F2":"#FFFFFF"} background={following?"#FFFFFF":"#1877F2"}>
-        <button data-test="follow-btn" disabled={button} onClick={handleFollows}>{following?"Unfollow":"Follow"}</button>
+      <SideBar
+        mypage={myPage ? "none" : ""}
+        color={following ? "#1877F2" : "#FFFFFF"}
+        background={following ? "#FFFFFF" : "#1877F2"}
+      >
+        <button
+          data-test="follow-btn"
+          disabled={button}
+          onClick={handleFollows}
+        >
+          {following ? "Unfollow" : "Follow"}
+        </button>
         <TrendingBoard></TrendingBoard>
       </SideBar>
     </Page>
@@ -246,24 +276,24 @@ const SideBar = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  button{
-    display: ${(props)=>props.mypage};
+  button {
+    display: ${(props) => props.mypage};
     margin-top: 69px;
     width: 112px;
-    height: 31px; 
+    height: 31px;
     border-radius: 5px;
-    background: ${(props)=>props.background};
-    color: ${(props)=>props.color};
+    background: ${(props) => props.background};
+    color: ${(props) => props.color};
     font-family: "Lato", sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-    &:hover{
+    &:hover {
       filter: brightness(0.9);
     }
-    &:disabled{
+    &:disabled {
       filter: brightness(0.8);
     }
   }
-`
+`;

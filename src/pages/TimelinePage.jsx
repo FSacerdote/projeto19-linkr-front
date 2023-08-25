@@ -9,7 +9,7 @@ import DataContextProvider from "../context/AuthContext";
 import { useInterval } from "usehooks-ts";
 import LoadingMorePosts from "../components/LoadingMorePosts";
 import AlertNewPosts from "../components/AlertNewPosts";
-import { useWindowScroll } from "@uidotdev/usehooks"
+import { useWindowScroll } from "@uidotdev/usehooks";
 
 export default function TimelinePage() {
   const [contador, setContador] = useState(0);
@@ -20,7 +20,7 @@ export default function TimelinePage() {
 
   const [posts, setPosts] = useState([]);
   const [{ y }] = useWindowScroll();
-  const [ offset, setOffset ] = useState(0);
+  const [offset, setOffset] = useState(0);
   const [morePages, setMorePages] = useState(false);
   const [newPosts, setNewPosts] = useState([]);
   const [firstPostId, setFirstPostId] = useState(0);
@@ -30,10 +30,14 @@ export default function TimelinePage() {
   useEffect(() => {
     const windowHeight = window.innerHeight;
     const fullPageHeight = document.documentElement.scrollHeight;
-    if ((y + windowHeight + 320 >= fullPageHeight) && !isPageLoading && morePages && offset >= 10) {
+    if (
+      y + windowHeight + 320 >= fullPageHeight &&
+      !isPageLoading &&
+      morePages
+    ) {
       setIsPageLoading(true);
       getPosts(false);
-    } 
+    }
   }, [y]);
 
   function includeNewPosts() {
@@ -48,7 +52,10 @@ export default function TimelinePage() {
         configRef.current
       )
       .then((resposta) => {
-        if (resposta.data.length !== 0) {
+        const noRepeatedPosts = resposta.data.filter((newPost) => {
+          return posts.some((post) => post.id === newPost.id);
+        });
+        if (noRepeatedPosts.length !== 0) {
           setOffset((prevOffset) => prevOffset + resposta.data.length);
           setNewPosts((prevPosts) => [...prevPosts, ...resposta.data]);
           setFirstPostId(resposta.data[0].id);
@@ -63,7 +70,7 @@ export default function TimelinePage() {
   }, 15000);
 
   function getPosts(isFirstPage) {
-    const currentOffset = isFirstPage? 0 : offset;
+    const currentOffset = isFirstPage ? 0 : offset;
 
     axios
       .get(
@@ -132,13 +139,18 @@ export default function TimelinePage() {
         <h1>timeline</h1>
         <PostForm contador={contador} setContador={setContador}></PostForm>
         {alertNewPosts && (
-          <AlertNewPosts handleClick={includeNewPosts} number={newPosts.length}></AlertNewPosts>
+          <AlertNewPosts
+            handleClick={includeNewPosts}
+            number={newPosts.length}
+          ></AlertNewPosts>
         )}
         {posts[0] === "empty" ? (
           <h2 data-test="message">No posts found from your friends</h2>
-        ) : (posts[0] === -1?(
-          <h2 data-test="message">You don't follow anyone yet. Search for new friends!</h2>
-        ):(
+        ) : posts[0] === -1 ? (
+          <h2 data-test="message">
+            You don't follow anyone yet. Search for new friends!
+          </h2>
+        ) : (
           posts.map((post) => (
             <Post
               key={post.id}
@@ -147,7 +159,7 @@ export default function TimelinePage() {
               setContador={setContador}
             />
           ))
-        ))}
+        )}
         {morePages && <LoadingMorePosts />}
       </Timeline>
       <TrendingBoard></TrendingBoard>
@@ -193,7 +205,7 @@ const Timeline = styled.div`
   @media (max-width: 1000px) {
     width: 100%;
     margin-top: 20px;
-    h1{
+    h1 {
       margin-left: 17px;
       font-size: 33px;
     }
