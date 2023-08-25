@@ -52,7 +52,7 @@ export default function TimelinePage() {
       )
       .then((resposta) => {
         const noRepeatedPosts = resposta.data.filter((newPost) => {
-          return posts.some((post) => post.id === newPost.id);
+          return posts.some((post) => post.id !== newPost.id);
         });
         if (noRepeatedPosts.length !== 0 && noRepeatedPosts[0] !== -1) {
           setOffset((prevOffset) => prevOffset + noRepeatedPosts.length);
