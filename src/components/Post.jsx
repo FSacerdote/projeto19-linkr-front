@@ -1,9 +1,10 @@
 import { styled } from "styled-components";
 import LikeButton from "./LikeButton";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { PiPencilFill } from "react-icons/pi";
 import { AiFillDelete } from "react-icons/ai";
 import { useContext, useEffect, useRef, useState } from "react";
+import { BsSend } from "react-icons/bs";
 import Modal from "react-modal";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
@@ -12,7 +13,6 @@ import DataContextProvider from "../context/AuthContext";
 import { BiRepost } from "react-icons/bi";
 import CommentButton from "./CommentButton";
 import Comments from "./Comments";
-import CommentField from "./CommentField";
 
 Modal.setAppElement("#root");
 
@@ -30,7 +30,7 @@ export default function Post({ post, contador, setContador }) {
     commentCount,
     referPost,
     reposterUsername,
-    repostCount
+    repostCount,
   } = post;
   const [editedText, setEditedText] = useState(description);
   const [editModeText, setEditModeText] = useState(editedText);
@@ -42,7 +42,7 @@ export default function Post({ post, contador, setContador }) {
   const [isRepostModalOpen, setRepostModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
 
-  const { config } = useContext(DataContextProvider);
+  const { config, picture } = useContext(DataContextProvider);
   const userSessionId = useContext(DataContextProvider).userId;
 
   const isOwner = userId === userSessionId;
@@ -124,7 +124,7 @@ export default function Post({ post, contador, setContador }) {
 
   function handleRepostConfirm() {
     axios
-      .post(`${apiUrl}/repost/${referPost? referPost : id}`, config)
+      .post(`${apiUrl}/repost/${referPost ? referPost : id}`, config)
       .then((resp) => {
         console.log(resp.data);
         setContador(contador - 1);
@@ -156,25 +156,47 @@ export default function Post({ post, contador, setContador }) {
     setIsCommenting(!isCommenting);
 
     try {
-      const response = await axios.get(`${apiUrl}/post/${referPost? referPost : id}/comments`, config);
+      const response = await axios.get(
+        `${apiUrl}/post/${referPost ? referPost : id}/comments`,
+        config
+      );
       setComments(response.data);
     } catch (error) {
       console.log(error.response.message);
     }
   }
 
-  useEffect(() => {
+  const [text, setText] = useState("");
+
+  function handleSubmitComment() {
+    const body = {
+      text,
+    };
+    console.log(body);
+
+    axios
+      .post(`${apiUrl}/post/${id}/comment`, body, config)
+      .then((resp) => console.log(resp.data))
+      .catch((err) => console.log(err.response.message));
+
+    setText("");
+
     axios
       .get(`${apiUrl}/post/${id}/comments`, config)
-      .then((resp) => {
-        setComments(resp.data);
-      })
-      .catch((err) => console.log(err.response.message));
-  }, [apiUrl, comments, config, id]);
+      .then((resp) => setComments(resp.data))
+      .catch((error) => console.log(error.response.message));
+  }
 
   return (
-    <Container data-test="post" $isRepost={referPost? true : false}>
-      {referPost && <RepostBar><BiRepost></BiRepost><p>Re-posted by <span>{reposterUsername}</span></p></RepostBar>}
+    <Container data-test="post" $isRepost={referPost ? true : false}>
+      {referPost && (
+        <RepostBar>
+          <BiRepost></BiRepost>
+          <p>
+            Re-posted by <span>{reposterUsername}</span>
+          </p>
+        </RepostBar>
+      )}
       <PostContainer>
         <Info>
           <User>
@@ -187,15 +209,22 @@ export default function Post({ post, contador, setContador }) {
             />
           </User>
           <LikeButton
-            postId={referPost? referPost : id}
+            postId={referPost ? referPost : id}
             likeCount={likeCount}
             likedUsers={likedUsers}
           />
           <button onClick={handleCommentButton}>
-            <CommentButton postId={referPost? referPost : id} commentCount={commentCount} />
+            <CommentButton
+              postId={referPost ? referPost : id}
+              commentCount={commentCount}
+            />
           </button>
-          <button data-test="repost-btn" onClick={openRepostModal}><RepostIcon onClick={openRepostModal}/></button>
-          <RepostCounter data-test="repost-counter">{repostCount} re-post{repostCount==="1"? "": "s"}</RepostCounter>
+          <button data-test="repost-btn" onClick={openRepostModal}>
+            <RepostIcon onClick={openRepostModal} />
+          </button>
+          <RepostCounter data-test="repost-counter">
+            {repostCount} re-post{repostCount === "1" ? "" : "s"}
+          </RepostCounter>
         </Info>
         <Content>
           <Top>
@@ -209,7 +238,9 @@ export default function Post({ post, contador, setContador }) {
             </UserName>
             {isOwner && (
               <Buttons>
-                {!referPost && <EditIcon data-test="edit-btn" onClick={handleEdit} />}
+                {!referPost && (
+                  <EditIcon data-test="edit-btn" onClick={handleEdit} />
+                )}
                 <DeleteIcon data-test="delete-btn" onClick={openDeleteModal} />
               </Buttons>
             )}
@@ -285,7 +316,17 @@ export default function Post({ post, contador, setContador }) {
               userId={comment.userId}
             />
           ))}
-          <CommentField postId={referPost? referPost : id} />
+          <UserComment>
+            <Avatar src={picture} alt="picture"></Avatar>
+            <WriteField
+              placeholder="write a comment..."
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              name="text"
+            ></WriteField>
+            <SendButton onClick={handleSubmitComment} />
+          </UserComment>
         </CommentSection>
       )}
 
@@ -354,11 +395,11 @@ const CommentSection = styled.div`
 const Container = styled.div`
   position: relative;
   margin-top: ${(props) => {
-        if (props.$isRepost) {
-            return "40px";
-        }
-        return "16px";
-    }};
+    if (props.$isRepost) {
+      return "40px";
+    }
+    return "16px";
+  }};
   display: flex;
   flex-direction: column;
   gap: 44px;
@@ -630,6 +671,40 @@ const BackgroundOverlay = styled.div`
   background: rgba(255, 255, 255, 0.9);
   z-index: 10;
 `;
+const SendButton = styled(BsSend)`
+  position: relative;
+  cursor: pointer;
+`;
+
+const WriteField = styled.input`
+  border-radius: 8px;
+  background: #252525;
+  height: 39px;
+  border: none;
+  width: 510px;
+  margin-right: -50px;
+
+  color: #575757;
+  padding: 15px;
+  font-style: italic;
+
+  letter-spacing: 0.7px;
+`;
+
+const UserComment = styled.div`
+  padding-top: 15px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  color: #fff;
+`;
+
+const Avatar = styled.img`
+  width: 39px;
+  height: 39px;
+  object-fit: cover;
+  border-radius: 50%;
+`;
 
 const RepostBar = styled.div`
   position: absolute;
@@ -645,7 +720,7 @@ const RepostBar = styled.div`
   gap: 5px;
   padding-left: 10px;
   padding-top: 8px;
-  
+
   p {
     font-weight: 400;
     font-family: "Lato", sans-serif;
