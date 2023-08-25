@@ -138,6 +138,7 @@ export function UserPage() {
         setFollowing(resposta.data.follows);
       })
       .catch((erro) => {
+        alert("Não foi possível completar a requisição");
         console.log(erro);
       });
     getInfo();
