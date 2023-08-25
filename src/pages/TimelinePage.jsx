@@ -55,10 +55,10 @@ export default function TimelinePage() {
         const noRepeatedPosts = resposta.data.filter((newPost) => {
           return posts.some((post) => post.id === newPost.id);
         });
-        if (noRepeatedPosts.length !== 0) {
-          setOffset((prevOffset) => prevOffset + resposta.data.length);
-          setNewPosts((prevPosts) => [...prevPosts, ...resposta.data]);
-          setFirstPostId(resposta.data[0].id);
+        if (noRepeatedPosts.length !== 0 && noRepeatedPosts[0] !== -1) {
+          setOffset((prevOffset) => prevOffset + noRepeatedPosts.length);
+          setNewPosts((prevPosts) => [...prevPosts, ...noRepeatedPosts]);
+          setFirstPostId(noRepeatedPosts[0].id);
           setAlertNewPosts(true);
         }
       })
