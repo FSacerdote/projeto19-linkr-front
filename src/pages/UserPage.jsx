@@ -152,6 +152,7 @@ export function UserPage() {
           setFollowing(false);
         })
         .catch(() => {
+          setButton(false);
           alert("Não foi possível completar a requisição");
         });
     } else {
@@ -166,6 +167,7 @@ export function UserPage() {
           setFollowing(true);
         })
         .catch(() => {
+          setButton(false);
           alert("Não foi possível completar a requisição");
         });
     }
