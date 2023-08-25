@@ -103,6 +103,7 @@ export default function TimelinePage() {
       .catch((error) => {
         console.log(error);
         setIsPageLoading(false);
+        alert("An error occured while trying to fetch the posts, please refresh the page");
         setMessage(
           "An error occured while trying to fetch the posts, please refresh the page"
         );
